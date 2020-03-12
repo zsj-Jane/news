@@ -9,6 +9,8 @@ Vue.config.productionTip = false
 import Vant from 'vant';
 import 'vant/lib/index.css';
 Vue.use(Vant);
+// 导入字体库
+import '@/style/font.css';
 // 实例化vue
 new Vue({
   router,

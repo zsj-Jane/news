@@ -3,8 +3,15 @@
     <!-- 导航栏 -->
     <van-nav-bar title="登录" />
     <!-- 2个输入框 -->
-    <van-field placeholder="请输入用户名" left-icon="smile-o" />
-    <van-field placeholder="请输入密码" left-icon="smile-o">
+    <van-field placeholder="请输入用户名">
+      <template slot="left-icon">
+        <i class="iconfont icon-phone"></i>
+      </template>
+    </van-field>
+    <van-field placeholder="请输入密码">
+      <template slot="left-icon">
+        <i class="iconfont icon-Lock"></i>
+      </template>
       <van-button slot="button" size="small" round>发送验证码</van-button>
     </van-field>
     <!-- 登录按钮 -->
@@ -18,7 +25,7 @@ export default {};
 
 <style lang="less">
 .login {
-    background-color: #f5f7f9;
+  background-color: #f5f7f9;
   .van-nav-bar {
     background-color: #3296fa;
 
@@ -29,10 +36,10 @@ export default {};
   .van-button--small {
     background-color: #ededed;
   }
-  .van-button--normal{
-      width: 90%;
-      display: block;
-      margin: 30px auto;
+  .van-button--normal {
+    width: 90%;
+    display: block;
+    margin: 30px auto;
   }
 }
 </style>
