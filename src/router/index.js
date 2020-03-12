@@ -4,9 +4,14 @@ import Vue from 'vue'
 import VueRouter from 'vue-router'
 // 注册路由
 Vue.use(VueRouter)
+// 导入组件
+import login from '@/views/login/index.vue';
 // 路由规则
 const routes = [
-  
+  {
+    path:'/login',
+    component:login
+  }
 ]
 // 实例化路由对象
 const router = new VueRouter({

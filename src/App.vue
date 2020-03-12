@@ -1,15 +1,11 @@
 <template>
-  <div>
-    
-  </div>
+  <!-- 路由出口 -->
+  <router-view></router-view>
 </template>
 
 <script>
-export default {
-
-}
+export default {};
 </script>
 
 <style>
-
 </style>
