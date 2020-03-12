@@ -3,24 +3,79 @@
     <!-- 导航栏 -->
     <van-nav-bar title="登录" />
     <!-- 2个输入框 -->
-    <van-field placeholder="请输入用户名">
+    <van-field placeholder="请输入手机号" :error-message="valid.mobile" v-model="form.mobile">
       <template slot="left-icon">
         <i class="iconfont icon-phone"></i>
       </template>
     </van-field>
-    <van-field placeholder="请输入密码">
+    <van-field placeholder="请输入验证码" :error-message="valid.code" v-model="form.code">
       <template slot="left-icon">
         <i class="iconfont icon-Lock"></i>
       </template>
       <van-button slot="button" size="small" round>发送验证码</van-button>
     </van-field>
     <!-- 登录按钮 -->
-    <van-button type="info">登录</van-button>
+    <van-button type="info" @click="doLogin">登录</van-button>
   </div>
 </template>
 
 <script>
-export default {};
+// 导入登录接口
+import { login } from "@/api/login.js";
+export default {
+  data() {
+    return {
+      // 双向绑定数据
+      form: {
+        mobile: "",
+        code: ""
+      },
+      // 错误提示对象
+      valid: {
+        mobile: "",
+        code: ""
+      }
+    };
+  },
+  methods: {
+    // 登录格式校验
+    checkLogin() {
+      let flag = true;
+      // 只要有一个不匹配，就把flag的值改为false
+      if (/0?(13|14|15|18)[0-9]{9}/.test(this.form.mobile)) {
+        // 格式正确，把错误信息清空
+        this.valid.mobile = "";
+      } else {
+        // 错误信息显示
+        this.valid.mobile = "请输入正确的手机号";
+        // 不通过就把值改为false
+        flag = false;
+      }
+      if (this.form.code.length == 6) {
+        // 格式正确，把错误信息清空
+        this.valid.code = "";
+      } else {
+        // 错误信息显示
+        this.valid.code = "请输入6位验证码";
+        // 不通过就把值改为false
+        flag = false;
+      }
+      return flag;
+    },
+    async doLogin() {
+      // 登录验证
+      if (this.checkLogin()) {
+        // 发送登录请求
+        try {
+          let res = await login(this.form);
+          console.log(res);
+        } catch(error) {
+          console.log("账号或验证码错误！");
+        }
+      }
+    }
+  }
+};
 </script>
 
 <style lang="less">
