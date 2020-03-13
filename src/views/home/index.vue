@@ -1,13 +1,117 @@
 <template>
-  <h1>首页</h1>
+  <div class="home">
+    <!-- 顶部导航栏 -->
+    <div class="top-nav">
+      <!-- 左边图标 -->
+      <van-icon class="top-icon" name="wap-nav" />
+      <!-- 搜索框 -->
+      <van-search
+        class="top-search"
+        v-model="value"
+        shape="round"
+        background="#3194ff"
+        placeholder="请输入搜索关键词"
+      />
+      <!-- 右边图标 -->
+      <van-icon class="top-icon" name="search" />
+    </div>
+    <!-- 频道部分 -->
+    <van-tabs v-model="active" class="tabs">
+      <van-tab v-for="(item, index) in 6" :key="index" :title="'标签'+item">
+        <van-list v-model="loading" :finished="finished" finished-text="没有更多了" @load="onLoad">
+          <van-cell v-for="item in list" :key="item" :title="item" />
+        </van-list>
+      </van-tab>
+    </van-tabs>
+  </div>
 </template>
 
 <script>
 export default {
-
-}
+  data() {
+    return {
+      value: "",
+      active: 0,
+      list: [],
+      loading: false,
+      finished: false
+    };
+  },
+  methods: {
+    // 加载数据的方法
+    onLoad() {
+      console.log("被调用了");
+      let arr = [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20
+      ];
+      this.list.push(...arr);
+      // 加载一段数据，改成false的话，后面滚到最后一定会调用onLoad
+      // 这个属性是控制加载状态的，为false就会再调用onLoad，为true就不调用
+      this.loading = false;
+      // 如果数据超过100个就不加载了，显示没有更多数据了
+      if (this.list.length >= 100) {
+        this.finished = true;
+      }
+    }
+  }
+};
 </script>
 
-<style>
-
+<style lang="less">
+.home {
+  .top-nav {
+    display: flex;
+    align-items: center;
+    background-color: #3194ff;
+    padding-left: 10px;
+    padding-right: 10px;
+    // 固定定位
+    position: fixed;
+    // 提高层级
+    z-index: 999;
+    // div不脱标会用父盒子宽度，但固定定位脱标了，靠内容撑开
+    width: 100%;
+    // 内减模型
+    box-sizing: border-box;
+    top: 0;
+    .top-icon {
+      font-size: 20px;
+      color: white;
+    }
+    .top-search {
+      flex: 1;
+    }
+  }
+  .tabs {
+    .van-tabs__wrap {
+      position: fixed;
+      z-index: 999;
+      top: 54px;
+      width: 100%;
+    }
+    .van-tabs__content {
+      margin-top: 98px;
+      margin-bottom: 50px;
+    }
+  }
+}
 </style>
