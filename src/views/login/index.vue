@@ -15,7 +15,7 @@
       <van-button slot="button" size="small" round>发送验证码</van-button>
     </van-field>
     <!-- 登录按钮 -->
-    <van-button type="info" :loading="isLoading" loading-text="登录中..." @click="doLogin">登录</van-button>
+    <van-button type="info" :loading="isLoading" loading-type="spinner" loading-text="登录中..." @click="doLogin">登录</van-button>
   </div>
 </template>
 
@@ -76,7 +76,7 @@ export default {
           console.log(res);
         } catch (error) {
           // 错误提示
-          console.log("账号或验证码错误！");
+          this.$toast.fail('账号或验证码错误！');
         } finally {
           // 关闭登录中状态
           this.isLoading = false;
@@ -89,6 +89,7 @@ export default {
 
 <style lang="less">
 .login {
+  height: 100%;
   background-color: #f5f7f9;
   .van-nav-bar {
     background-color: #3296fa;
