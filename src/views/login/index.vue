@@ -74,9 +74,11 @@ export default {
           // 发送登录请求
           let res = await login(this.form);
           console.log(res);
-          // 登录成功后，把token存起来
+          // 登录成功后，使用vuex把token存起来（短时间）
           this.$store.commit('changeToken',res.data.token);
           this.$store.commit('changeRefreshToken',res.data.refresh_token);
+          // 本地存储token（长久）
+          window.localStorage.setItem('ttToken',JSON.stringify(res.data));
           // 登录成功后，跳转到首页
           this.$router.push('/home');
         } catch (error) {
