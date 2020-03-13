@@ -18,9 +18,11 @@
     <!-- 频道部分 -->
     <van-tabs v-model="active" class="tabs">
       <van-tab v-for="(item, index) in 6" :key="index" :title="'标签'+item">
-        <van-list v-model="loading" :finished="finished" finished-text="没有更多了" @load="onLoad">
-          <van-cell v-for="item in list" :key="item" :title="item" />
-        </van-list>
+        <van-pull-refresh v-model="pullLoading" @refresh="onRefresh">
+          <van-list v-model="loading" :finished="finished" finished-text="没有更多了" @load="onLoad">
+            <van-cell v-for="item in list" :key="item" :title="item" />
+          </van-list>
+        </van-pull-refresh>
       </van-tab>
     </van-tabs>
   </div>
@@ -32,37 +34,21 @@ export default {
     return {
       value: "",
       active: 0,
+      // 列表数据
       list: [],
+      // 控制列表的刷新状态，为false会调用onLoad，为true则不调用
       loading: false,
-      finished: false
+      // 是否已经刷到底部
+      finished: false,
+      // 控制下拉刷新的状态
+      pullLoading: false
     };
   },
   methods: {
     // 加载数据的方法
     onLoad() {
       console.log("被调用了");
-      let arr = [
-        1,
-        2,
-        3,
-        4,
-        5,
-        6,
-        7,
-        8,
-        9,
-        10,
-        11,
-        12,
-        13,
-        14,
-        15,
-        16,
-        17,
-        18,
-        19,
-        20
-      ];
+      let arr = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13];
       this.list.push(...arr);
       // 加载一段数据，改成false的话，后面滚到最后一定会调用onLoad
       // 这个属性是控制加载状态的，为false就会再调用onLoad，为true就不调用
@@ -71,6 +57,14 @@ export default {
       if (this.list.length >= 100) {
         this.finished = true;
       }
+    },
+    // 下拉刷新的方法
+    onRefresh() {
+      // 只要往下拽就会触发，一旦触发，会自动把下拉状态给为true
+      console.log("下拉刷新了" + this.pullLoading);
+      setTimeout(() => {
+        this.pullLoading = false;
+      }, 1000);
     }
   }
 };
