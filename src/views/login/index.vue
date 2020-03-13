@@ -15,7 +15,7 @@
       <van-button slot="button" size="small" round>发送验证码</van-button>
     </van-field>
     <!-- 登录按钮 -->
-    <van-button type="info" @click="doLogin">登录</van-button>
+    <van-button type="info" :loading="isLoading" loading-text="登录中..." @click="doLogin">登录</van-button>
   </div>
 </template>
 
@@ -27,14 +27,16 @@ export default {
     return {
       // 双向绑定数据
       form: {
-        mobile: "",
-        code: ""
+        mobile: "18612345678",
+        code: "246810"
       },
       // 错误提示对象
       valid: {
         mobile: "",
         code: ""
-      }
+      },
+      // 加载中状态
+      isLoading: false
     };
   },
   methods: {
@@ -62,15 +64,22 @@ export default {
       }
       return flag;
     },
+    // 登录按钮的点击事件
     async doLogin() {
       // 登录验证
       if (this.checkLogin()) {
-        // 发送登录请求
+        // 打开登录中状态
+        this.isLoading = true;
         try {
+          // 发送登录请求
           let res = await login(this.form);
           console.log(res);
-        } catch(error) {
+        } catch (error) {
+          // 错误提示
           console.log("账号或验证码错误！");
+        } finally {
+          // 关闭登录中状态
+          this.isLoading = false;
         }
       }
     }
