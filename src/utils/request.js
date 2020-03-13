@@ -1,5 +1,6 @@
 // 导入axios
 import axios from 'axios';
+import store from '@/store/';
 // 创建一个新的axios实例
 let request = axios.create({
     baseURL: "http://ttapi.research.itcast.cn/app/v1_0/"
@@ -7,6 +8,11 @@ let request = axios.create({
 // 添加请求拦截器
 request.interceptors.request.use(function (config) {
     // 在发送请求之前做些什么
+    // 加请求头，请求头里带token
+    if (store.state.token) {
+        // 登录后有token了，才加请求头
+        config.headers.Authorization = 'Bearer ' + store.state.token;
+    }
     return config;
 }, function (error) {
     // 对请求错误做些什么

@@ -17,10 +17,10 @@
     </div>
     <!-- 频道部分 -->
     <van-tabs v-model="active" class="tabs">
-      <van-tab v-for="(item, index) in 6" :key="index" :title="'标签'+item">
+      <van-tab v-for="(item, index) in channelList" :key="index" :title="item.name">
         <van-pull-refresh v-model="pullLoading" @refresh="onRefresh">
           <van-list v-model="loading" :finished="finished" finished-text="没有更多了" @load="onLoad">
-            <van-cell v-for="item in list" :key="item" :title="item" />
+            <van-cell v-for="(item,index) in list" :key="index" :title="item" />
           </van-list>
         </van-pull-refresh>
       </van-tab>
@@ -29,19 +29,24 @@
 </template>
 
 <script>
+// 导入获取用户频道列表接口
+import { channelList } from "@/api/channel.js";
 export default {
+  name: "home",
   data() {
     return {
       value: "",
       active: 0,
+      // 频道数据
+      channelList: [],
+      // 控制下拉刷新的状态
+      pullLoading: false,
       // 列表数据
       list: [],
       // 控制列表的刷新状态，为false会调用onLoad，为true则不调用
       loading: false,
       // 是否已经刷到底部
-      finished: false,
-      // 控制下拉刷新的状态
-      pullLoading: false
+      finished: false
     };
   },
   methods: {
@@ -66,6 +71,13 @@ export default {
         this.pullLoading = false;
       }, 1000);
     }
+  },
+  async created() {
+    // 发送获取用户频道列表请求
+    let res = await channelList();
+    window.console.log(res);
+    // 保存频道数据
+    this.channelList = res.data.channels;
   }
 };
 </script>
