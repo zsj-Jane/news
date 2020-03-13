@@ -77,6 +77,8 @@ export default {
           // 登录成功后，把token存起来
           this.$store.commit('changeToken',res.data.token);
           this.$store.commit('changeRefreshToken',res.data.refresh_token);
+          // 登录成功后，跳转到首页
+          this.$router.push('/home');
         } catch (error) {
           // 错误提示
           this.$toast.fail('账号或验证码错误！');
