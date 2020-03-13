@@ -17,10 +17,10 @@
     </div>
     <!-- 频道部分 -->
     <van-tabs v-model="active" class="tabs">
-      <van-tab v-for="(item, index) in channelList" :key="index" :title="item.name">
+      <van-tab v-for="(item, index) in channelList" :key="index" :name="item.id" :title="item.name">
         <van-pull-refresh v-model="pullLoading" @refresh="onRefresh">
           <van-list v-model="loading" :finished="finished" finished-text="没有更多了" @load="onLoad">
-            <van-cell v-for="(item,index) in list" :key="index" :title="item" />
+            <van-cell v-for="(item,index) in list" :key="index" :title="item.title" />
           </van-list>
         </van-pull-refresh>
       </van-tab>
@@ -31,12 +31,14 @@
 <script>
 // 导入获取用户频道列表接口
 import { channelList } from "@/api/channel.js";
+// 导入获取频道新闻推荐列表接口
+import { articleList } from "@/api/article.js";
 export default {
   name: "home",
   data() {
     return {
       value: "",
-      active: 0,
+      active: "",
       // 频道数据
       channelList: [],
       // 控制下拉刷新的状态
@@ -51,10 +53,19 @@ export default {
   },
   methods: {
     // 加载数据的方法
-    onLoad() {
-      console.log("被调用了");
-      let arr = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13];
-      this.list.push(...arr);
+    async onLoad() {
+      // 获取频道新闻推荐列表数据
+      let res = await articleList({
+        // 频道id
+        channel_id: this.active,
+        // 时间戳
+        timestamp: Date.now(),
+        // 是否包含置顶
+        with_top: 0
+      });
+      console.log(res);
+
+      this.list.push(...res.data.results);
       // 加载一段数据，改成false的话，后面滚到最后一定会调用onLoad
       // 这个属性是控制加载状态的，为false就会再调用onLoad，为true就不调用
       this.loading = false;
@@ -75,7 +86,6 @@ export default {
   async created() {
     // 发送获取用户频道列表请求
     let res = await channelList();
-    window.console.log(res);
     // 保存频道数据
     this.channelList = res.data.channels;
   }
