@@ -93,6 +93,18 @@ export default {
       });
       // 调用接口发送请求 保存频道
       channelSave({ channels });
+      // 解决新增频道对象只有id和name属性的问题，手动添加下面5个属性
+      // 控制下拉刷新的状态
+      // 直接赋值，界面不会跟着响应，要用$set
+      this.$set(item, "pullLoading", false);
+      // 列表数据(新闻数据)
+      this.$set(item, "list", []);
+      // 控制列表的刷新状态，为false会调用onLoad，为true则不调用
+      this.$set(item, "loading", false);
+      // 是否已经刷到底部
+      this.$set(item, "finished", false);
+      // 第一次请求数据时，是没有上一次请求的时间戳的，存当前时间即可
+      this.$set(item, "pre_timestamp", Date.now());
     },
     // 删除图标的点击事件（删除频道）
     removeChannel(item) {
