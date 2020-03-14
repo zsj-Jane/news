@@ -58,9 +58,7 @@ export default {
       // 控制弹出层显示状态
       show: false,
       // 所有频道数据
-      allList: [],
-      // 过滤掉我的频道外的所有频道
-      otherList: []
+      allList: []
     };
   },
   methods: {
@@ -68,15 +66,7 @@ export default {
     addChannel(item) {
       // 把被点击的频道添加到我的频道中
       this.myList.push(item);
-      // 删除otherList中的被点击的频道
-      for (let i = 0; i < this.otherList.length; i++) {
-        // 找到被点击的元素
-        if (this.otherList[i] == item) {
-          // 删除数组元素
-          this.otherList.splice(i, 1);
-        }
-      }
-      // 准备调用接口要传的参数,参数要求不能带‘推荐’频道，需要把‘推荐’频道截取掉，剩下的频道为要传的参数
+      // 准备调用接口要传的参数,参数要求不能带‘推荐’频道，需要把‘推荐’频道去掉，从下标1开始截取，截取到的频道为要传的参数
       let channels = this.myList.slice(1).map((item, index) => {
         return {
           id: item.id,
@@ -87,22 +77,26 @@ export default {
       channelSave({ channels });
     }
   },
+  computed: {
+    // 过滤掉我的频道外的所有频道（不用再手动删除添加的频道了）
+    otherList() {
+      // 找出我的频道中的id
+      let ids = this.myList.map(item => {
+        return item.id;
+      });
+      // 过滤掉我的频道外的其他所有频道
+      return this.allList.filter(item => {
+        // 判断每个频道是否在myList里面
+        return !ids.includes(item.id);
+      });
+    }
+  },
   async created() {
     // 请求所有频道数据
     let res = await channelAll();
     // console.log(res);
     // 保存所有频道数据
     this.allList = res.data.channels;
-    // 找出我的频道中的id
-    let ids = this.myList.map(item => {
-      return item.id;
-    });
-    // console.log(ids);
-    // 过滤掉我的频道外的其他所有频道
-    this.otherList = this.allList.filter(item => {
-      return !ids.includes(item.id);
-    });
-    // console.log(this.otherList);
   }
 };
 </script>
