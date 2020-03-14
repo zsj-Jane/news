@@ -19,8 +19,13 @@
     <van-tabs v-model="active" class="tabs">
       <van-tab v-for="(item, index) in channelList" :key="index" :name="item.id" :title="item.name">
         <van-pull-refresh v-model="item.pullLoading" @refresh="onRefresh(item)">
-          <van-list v-model="item.loading" :finished="item.finished" finished-text="没有更多了" @load="onLoad(item)">
-            <van-cell v-for="(item1,index1) in item.list" :key="index1" :title="item1.title" />
+          <van-list
+            v-model="item.loading"
+            :finished="item.finished"
+            finished-text="没有更多了"
+            @load="onLoad(item)"
+          >
+            <van-cell v-for="(it,idx) in item.list" :key="idx" :title="it.title" />
           </van-list>
         </van-pull-refresh>
       </van-tab>
@@ -52,20 +57,27 @@ export default {
       let res = await articleList({
         // 频道id
         channel_id: item.id,
-        // 时间戳
-        timestamp: Date.now(),
+        // 时间戳,用Date.now()返回的是随机数据，用 上一次请求返回的pre_timestamp时间戳 则返回的是下一页的数据
+        timestamp: item.pre_timestamp,
         // 是否包含置顶
         with_top: 0
       });
       console.log(res);
-
-      item.list.push(...res.data.results);
-      // 加载一段数据，改成false的话，后面滚到最后一定会调用onLoad
-      // 这个属性是控制加载状态的，为false就会再调用onLoad，为true就不调用
-      item.loading = false;
-      // 如果数据超过100个就不加载了，显示没有更多数据了
-      if (item.list.length >= 100) {
+      // 拿到新闻数据
+      let arr = res.data.results;
+      // 一拿到数据，就判断是否为空
+      if (arr.length == 0) {
+        // 拿到的新闻数据为空，表示加载完了，显示没有更多数据了
         item.finished = true;
+      } else {
+        // 拿到的新闻数据不为空，表示还有数据
+        // 修改该频道数据中的list
+        item.list.push(...arr);
+        // 记录上一次请求返回的pre_timestamp时间戳(上一页的时间戳)
+        item.pre_timestamp = res.data.pre_timestamp;
+        // 加载一段数据，改成false的话，后面滚到最后一定会调用onLoad
+        // 这个属性是控制加载状态的，为false就会再调用onLoad，为true就不调用
+        item.loading = false;
       }
     },
     // 下拉刷新的方法
@@ -87,13 +99,16 @@ export default {
       // 控制下拉刷新的状态
       // 直接赋值，界面不会跟着响应，要用$set
       // item.pullLoading = false;
-      this.$set(item,'pullLoading',false);
+      this.$set(item, "pullLoading", false);
       // 列表数据(新闻数据)
-      this.$set(item,'list',[]);
+      this.$set(item, "list", []);
       // 控制列表的刷新状态，为false会调用onLoad，为true则不调用
-      this.$set(item,'loading',false);
+      this.$set(item, "loading", false);
       // 是否已经刷到底部
-      this.$set(item,'finished',false);
+      this.$set(item, "finished", false);
+      // 第一次请求数据时，是没有上一次请求的时间戳的，存当前时间即可
+      // 因为不用在界面显示，直接添加属性即可
+      item.pre_timestamp = Date.now();
     });
   }
 };
