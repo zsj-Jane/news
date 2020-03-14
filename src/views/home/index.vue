@@ -83,10 +83,18 @@ export default {
     // 下拉刷新的方法
     onRefresh(item) {
       // 只要往下拽就会触发，一旦触发，会自动把下拉状态给为true
-      console.log("下拉刷新了" + item.pullLoading);
-      setTimeout(() => {
-        item.pullLoading = false;
-      }, 1000);
+      // 每次下拉请求最新的随机数据，修改该频道的上一页时间戳为Date.now()
+      item.pre_timestamp = Date.now();
+      // loading改为false(可重新加载数据)
+      item.loading = false;
+      // finished改为false
+      item.finished = false;
+      // list重置为空数组
+      item.list = [];
+      // 重新加载数据
+      this.onLoad(item);
+      // 结束下拉状态
+      item.pullLoading=false;
     }
   },
   async created() {
