@@ -25,7 +25,34 @@
             finished-text="没有更多了"
             @load="onLoad(item)"
           >
-            <van-cell v-for="(it,idx) in item.list" :key="idx" :title="it.title" />
+            <!-- 每行就是一个单元格 -->
+            <van-cell v-for="(it,idx) in item.list" :key="idx" :title="it.title">
+              <!-- 自定义title内容 -->
+              <template slot="title">
+                <!-- 标题 -->
+                <div class="title">
+                  <span>{{it.title}}</span>
+                  <!-- 单张图片显示 -->
+                  <img v-if="it.cover.type==1" :src="it.cover.images[0]" alt class="pic" />
+                </div>
+                <!-- 图片（3张图片显示） -->
+                <van-grid v-if="it.cover.type==3" :border="false" :column-num="3">
+                  <van-grid-item v-for="(it1, idx1) in it.cover.images" :key="idx1">
+                    <!-- 宫格中的每个格子 -->
+                    <van-image class="pic1" :src="it1" />
+                  </van-grid-item>
+                </van-grid>
+                <!-- 作者、评论、时间等信息 -->
+                <div class="info">
+                  <div class="info-span">
+                    <span>{{it.aut_name}}</span>
+                    <span>{{it.comm_count}}</span>
+                    <span>{{it.pubdate|formatTime}}</span>
+                  </div>
+                  <van-icon class="info-close" name="cross" />
+                </div>
+              </template>
+            </van-cell>
           </van-list>
         </van-pull-refresh>
       </van-tab>
@@ -42,6 +69,16 @@ import { channelList } from "@/api/channel.js";
 import { articleList } from "@/api/article.js";
 // 导入频道弹出层组件
 import channel from "./components/channel";
+// 导入dayjs
+import dayjs from 'dayjs';
+// 导入相对时间插件
+import relativeTime from 'dayjs/plugin/relativeTime';
+// 让day.js加载这个插件
+dayjs.extend(relativeTime);
+// 导入中文包
+import 'dayjs/locale/zh-cn';
+// 把day.js设置为使用中文
+dayjs.locale('zh-cn');
 export default {
   name: "home",
   components: {
@@ -57,6 +94,12 @@ export default {
       // 频道数据
       channelList: []
     };
+  },
+  filters: {
+    // 相对时间
+    formatTime(time) {
+      return dayjs().from(time);
+    }
   },
   methods: {
     // 请求频道新闻列表数据
@@ -175,6 +218,38 @@ export default {
     .van-tabs__content {
       margin-top: 98px;
       margin-bottom: 50px;
+    }
+    .title {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 10px;
+      .pic {
+        width: 116px;
+        height: 73px;
+      }
+    }
+    .pic1 {
+      height: 73px;
+    }
+    .info {
+      display: flex;
+      justify-content: space-between;
+      .info-span {
+        span {
+          margin-right: 10px;
+          font-size: 12px;
+          color: #ccc;
+        }
+      }
+      .info-close {
+        border: 1px solid #ccc;
+        color: #ccc;
+        width: 23px;
+        height: 15px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
     }
   }
 }
