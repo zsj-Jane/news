@@ -30,13 +30,20 @@
       </div>
       <!-- 内容部分 -->
       <div class="content">
-        <van-tag v-for="(item, index) in 10" :key="index" size="large" class="channel-tag">+ 标签</van-tag>
+        <van-tag
+          v-for="(item, index) in otherList"
+          :key="index"
+          size="large"
+          class="channel-tag"
+        >+ {{item.name}}</van-tag>
       </div>
     </div>
   </van-popup>
 </template>
 
 <script>
+// 导入获取全部频道接口
+import { channelAll } from "@/api/channel.js";
 export default {
   name: "channelPop",
   props: {
@@ -48,8 +55,29 @@ export default {
   data() {
     return {
       // 控制弹出层显示状态
-      show: false
+      show: false,
+      // 所有频道数据
+      allList: [],
+      // 过滤掉我的频道外的所有频道
+      otherList: []
     };
+  },
+  async created() {
+    // 请求所有频道数据
+    let res = await channelAll();
+    // console.log(res);
+    // 保存所有频道数据
+    this.allList = res.data.channels;
+    // 找出我的频道中的id
+    let ids = this.myList.map(item => {
+      return item.id;
+    });
+    // console.log(ids);
+    // 过滤掉我的频道外的其他所有频道
+    this.otherList = this.allList.filter(item => {
+      return !ids.includes(item.id);
+    });
+    // console.log(this.otherList);
   }
 };
 </script>

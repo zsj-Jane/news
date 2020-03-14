@@ -7,3 +7,10 @@ export function channelList() {
         method:'get'
     })
 }
+// 获取所有频道
+export function channelAll() {
+    return request({
+        url:'channels',
+        method:'get'
+    })
+}

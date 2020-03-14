@@ -88,7 +88,7 @@ export default {
         item.list.push(...arr);
         // 记录上一次请求返回的pre_timestamp时间戳(上一页的时间戳)
         item.pre_timestamp = res.data.pre_timestamp;
-        console.log("上一页时间戳", item.pre_timestamp);
+        // console.log("上一页时间戳", item.pre_timestamp);
         // 加载一段数据，改成false的话，后面滚到最后一定会调用onLoad
         // 这个属性是控制加载状态的，为false就会再调用onLoad，为true就不调用
         item.loading = false;
@@ -99,7 +99,7 @@ export default {
       // 只要往下拽就会触发，一旦触发，会自动把下拉状态给为true
       // 每次下拉请求最新的随机数据，修改该频道的上一页时间戳为Date.now()
       item.pre_timestamp = Date.now();
-      console.log("下拉刷新时间戳", item.pre_timestamp);
+      // console.log("下拉刷新时间戳", item.pre_timestamp);
       // loading改为false(可重新加载数据)
       item.loading = false;
       // finished改为false
