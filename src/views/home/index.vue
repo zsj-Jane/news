@@ -3,7 +3,7 @@
     <!-- 顶部导航栏 -->
     <div class="top-nav">
       <!-- 左边图标 -->
-      <van-icon class="top-icon" name="wap-nav" />
+      <van-icon class="top-icon" name="wap-nav" @click="$refs.channel.show=true" />
       <!-- 搜索框 -->
       <van-search
         class="top-search"
@@ -30,6 +30,8 @@
         </van-pull-refresh>
       </van-tab>
     </van-tabs>
+    <!-- 频道弹出层 -->
+    <channel ref="channel" :myList="channelList"></channel>
   </div>
 </template>
 
@@ -38,8 +40,14 @@
 import { channelList } from "@/api/channel.js";
 // 导入获取频道新闻推荐列表接口
 import { articleList } from "@/api/article.js";
+// 导入频道弹出层组件
+import channel from "./components/channel";
 export default {
   name: "home",
+  components: {
+    // 频道弹出层组件
+    channel
+  },
   data() {
     return {
       // 搜索框绑定数据
@@ -94,7 +102,7 @@ export default {
       // 重新加载数据
       this.onLoad(item);
       // 结束下拉状态
-      item.pullLoading=false;
+      item.pullLoading = false;
     }
   },
   async created() {
@@ -159,5 +167,6 @@ export default {
       margin-bottom: 50px;
     }
   }
+  
 }
 </style>
