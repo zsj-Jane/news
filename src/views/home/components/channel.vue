@@ -35,6 +35,7 @@
           :key="index"
           size="large"
           class="channel-tag"
+          @click="addChannel(item)"
         >+ {{item.name}}</van-tag>
       </div>
     </div>
@@ -42,8 +43,8 @@
 </template>
 
 <script>
-// 导入获取全部频道接口
-import { channelAll } from "@/api/channel.js";
+// 导入频道相关接口
+import { channelAll, channelSave } from "@/api/channel.js";
 export default {
   name: "channelPop",
   props: {
@@ -61,6 +62,30 @@ export default {
       // 过滤掉我的频道外的所有频道
       otherList: []
     };
+  },
+  methods: {
+    // 添加频道到我的频道中
+    addChannel(item) {
+      // 把被点击的频道添加到我的频道中
+      this.myList.push(item);
+      // 删除otherList中的被点击的频道
+      for (let i = 0; i < this.otherList.length; i++) {
+        // 找到被点击的元素
+        if (this.otherList[i] == item) {
+          // 删除数组元素
+          this.otherList.splice(i, 1);
+        }
+      }
+      // 准备调用接口要传的参数,参数要求不能带‘推荐’频道，需要把‘推荐’频道截取掉，剩下的频道为要传的参数
+      let channels = this.myList.slice(1).map((item, index) => {
+        return {
+          id: item.id,
+          seq: index + 1
+        };
+      });
+      // 调用接口发送请求 保存频道
+      channelSave({ channels });
+    }
   },
   async created() {
     // 请求所有频道数据
