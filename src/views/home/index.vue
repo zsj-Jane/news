@@ -59,10 +59,10 @@ export default {
     };
   },
   methods: {
-    // 加载数据的方法
-    async onLoad(item) {
-      // 获取频道新闻推荐列表数据
-      let res = await articleList({
+    // 请求频道新闻列表数据
+    LoadList(item) {
+      // 获取频道新闻列表数据
+      return articleList({
         // 频道id
         channel_id: item.id,
         // 时间戳,用Date.now()返回的是随机数据，用 上一次请求返回的pre_timestamp时间戳 则返回的是下一页的数据
@@ -70,6 +70,11 @@ export default {
         // 是否包含置顶
         with_top: 0
       });
+    },
+    // 加载数据的方法
+    async onLoad(item) {
+      // 获取频道新闻列表数据
+      let res = await this.LoadList(item);
       console.log(res);
       // 拿到新闻数据
       let arr = res.data.results;
@@ -83,24 +88,29 @@ export default {
         item.list.push(...arr);
         // 记录上一次请求返回的pre_timestamp时间戳(上一页的时间戳)
         item.pre_timestamp = res.data.pre_timestamp;
+        console.log("上一页时间戳", item.pre_timestamp);
         // 加载一段数据，改成false的话，后面滚到最后一定会调用onLoad
         // 这个属性是控制加载状态的，为false就会再调用onLoad，为true就不调用
         item.loading = false;
       }
     },
     // 下拉刷新的方法
-    onRefresh(item) {
+    async onRefresh(item) {
       // 只要往下拽就会触发，一旦触发，会自动把下拉状态给为true
       // 每次下拉请求最新的随机数据，修改该频道的上一页时间戳为Date.now()
       item.pre_timestamp = Date.now();
+      console.log("下拉刷新时间戳", item.pre_timestamp);
       // loading改为false(可重新加载数据)
       item.loading = false;
       // finished改为false
       item.finished = false;
-      // list重置为空数组
-      item.list = [];
-      // 重新加载数据
-      this.onLoad(item);
+      // 获取频道新闻列表数据
+      let res = await this.LoadList(item);
+      console.log(res);
+      // list重新赋值为加载过来的数据
+      item.list = res.data.results;
+      // 重新记录下拉刷新后返回的pre_timestamp时间戳
+      item.pre_timestamp = res.data.pre_timestamp;
       // 结束下拉状态
       item.pullLoading = false;
     }
@@ -167,6 +177,5 @@ export default {
       margin-bottom: 50px;
     }
   }
-  
 }
 </style>
