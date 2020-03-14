@@ -7,18 +7,34 @@
     :style="{ width: '85%',height:'100%' }"
     closeable
     close-icon-position="top-left"
+    @closed="isEdit=false"
   >
     <!-- 我的频道 -->
     <div class="my-channel">
       <!-- 标题部分 -->
       <div class="title">
         <span>我的频道</span>
-        <van-button color="#f85a5a" plain round size="mini">编辑</van-button>
+        <van-button
+          @click="isEdit=!isEdit"
+          color="#f85a5a"
+          plain
+          round
+          size="mini"
+        >{{isEdit?'完成':'编辑'}}</van-button>
       </div>
       <!-- 内容部分 -->
       <div class="content">
         <template v-for="(item, index) in myList">
-          <van-tag v-if="index!=0" :key="index" size="large" class="channel-tag">{{item.name}}</van-tag>
+          <van-tag v-if="index!=0" :key="index" size="large" class="channel-tag">
+            {{item.name}}
+            <van-icon
+              v-if="isEdit"
+              @click="removeChannel(item)"
+              class="close"
+              name="clear"
+              color="rgb(205, 205, 205)"
+            />
+          </van-tag>
         </template>
       </div>
     </div>
@@ -58,7 +74,9 @@ export default {
       // 控制弹出层显示状态
       show: false,
       // 所有频道数据
-      allList: []
+      allList: [],
+      // 是否为编辑状态
+      isEdit: false
     };
   },
   methods: {
@@ -66,6 +84,24 @@ export default {
     addChannel(item) {
       // 把被点击的频道添加到我的频道中
       this.myList.push(item);
+      // 准备调用接口要传的参数,参数要求不能带‘推荐’频道，需要把‘推荐’频道去掉，从下标1开始截取，截取到的频道为要传的参数
+      let channels = this.myList.slice(1).map((item, index) => {
+        return {
+          id: item.id,
+          seq: index + 1
+        };
+      });
+      // 调用接口发送请求 保存频道
+      channelSave({ channels });
+    },
+    // 删除图标的点击事件（删除频道）
+    removeChannel(item) {
+      for (let i = 0; i < this.myList.length; i++) {
+        if (this.myList[i] == item) {
+          this.myList.splice(i, 1);
+        }
+      }
+      // 根据最新的myList生成传递的参数
       // 准备调用接口要传的参数,参数要求不能带‘推荐’频道，需要把‘推荐’频道去掉，从下标1开始截取，截取到的频道为要传的参数
       let channels = this.myList.slice(1).map((item, index) => {
         return {
@@ -111,6 +147,14 @@ export default {
   }
   .my-channel {
     margin-top: 60px;
+    .channel-tag {
+      position: relative;
+      .close {
+        position: absolute;
+        right: -8px;
+        top: -8px;
+      }
+    }
   }
   .recommend {
     margin-top: 35px;
