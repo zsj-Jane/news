@@ -9,3 +9,11 @@ export function articleList(params) {
         params
     });
 }
+// 对文章不喜欢
+export function articleDislike(data) {
+    return request({
+        url:'article/dislikes',
+        method:'post',
+        data
+    })
+}

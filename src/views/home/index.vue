@@ -49,7 +49,7 @@
                     <span>{{it.comm_count}}</span>
                     <span>{{it.pubdate|formatTime}}</span>
                   </div>
-                  <van-icon class="info-close" name="cross" />
+                  <van-icon class="info-close" name="cross" @click="showMore(it,item.list)"/>
                 </div>
               </template>
             </van-cell>
@@ -59,6 +59,8 @@
     </van-tabs>
     <!-- 频道弹出层 -->
     <channel ref="channel" :myList="channelList"></channel>
+    <!-- 更多操作弹出层 -->
+    <more ref="more"></more>
   </div>
 </template>
 
@@ -71,11 +73,15 @@ import { articleList } from "@/api/article.js";
 import channel from "./components/channel";
 // 导入dayjs
 import dayjs from 'dayjs';
+// 导入更多操作弹出层组件
+import more from './components/more';
 export default {
   name: "home",
   components: {
     // 频道弹出层组件
-    channel
+    channel,
+    // 更多操作弹出层组件
+    more
   },
   data() {
     return {
@@ -149,6 +155,18 @@ export default {
       item.pre_timestamp = res.data.pre_timestamp;
       // 结束下拉状态
       item.pullLoading = false;
+    },
+    // 更多操作图标的点击事件
+    showMore(item,list){
+      // item是当前点击文章，list是当前频道保存所有文章的数组
+      console.log(item,list);
+      
+      // 显示更多操作弹出层
+      this.$refs.more.show=true;
+      // 把被点击的文章的id传给组件
+      this.$refs.more.art_id = item.art_id;
+      // 把当前频道保存所有文章的数组传给组件
+      this.$refs.more.art_list = list;
     }
   },
   async created() {
