@@ -3,9 +3,15 @@
     <!-- 顶部通栏 -->
     <div class="top-nav">
       <!-- 搜索框 -->
-      <van-search class="top-search" v-model="value" background="#3194ff" placeholder="请输入搜索关键词" />
+      <van-search
+        @input="onInput"
+        class="top-search"
+        v-model="key"
+        background="#3194ff"
+        placeholder="请输入搜索关键词"
+      />
       <!-- 右边文字 -->
-      <span>取消</span>
+      <span @click="$router.back()">取消</span>
     </div>
     <!-- 历史记录区域 -->
     <div class="history" v-if="isHistory">
@@ -21,19 +27,39 @@
     </div>
     <!-- 搜索建议区域 -->
     <van-cell-group v-else>
-      <van-cell title="单元格" icon="search" />
+      <van-cell v-for="(item, index) in suggestList" :key="index" :title="item" icon="search" />
     </van-cell-group>
   </div>
 </template>
 
 <script>
+// 导入搜索相关接口
+import { getSuggestion } from "@/api/search.js";
 export default {
-    data() {
-        return {
-            // 是否显示历史记录
-            isHistory:true,
-        }
-    },
+  data() {
+    return {
+      // 是否显示历史记录
+      isHistory: true,
+      // 搜索框双向绑定的值
+      key: "",
+      // 搜索联想建议数组
+      suggestList: []
+    };
+  },
+  methods: {
+    async onInput() {
+      // 如果关键词删完了，就不发送请求了,并显示出历史记录区域
+      if (this.key == "") {
+        this.isHistory=true;
+        return;
+      }
+      // 发送请求
+      let res = await getSuggestion({ q: this.key });
+      // 保存获取的搜索联想建议
+      this.suggestList = res.data.options;
+      this.isHistory = false;
+    }
+  }
 };
 </script>
 
