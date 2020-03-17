@@ -15,5 +15,13 @@ export function articleDislike(data) {
         url:'article/dislikes',
         method:'post',
         data
-    })
+    });
+}
+// 举报文章
+export function articleReport(data) {
+    return request({
+        url:'article/reports',
+        method:'post',
+        data
+    });
 }
