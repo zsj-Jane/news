@@ -60,7 +60,7 @@
 
 <script>
 // 导入频道相关接口
-import { channelAll, channelSave } from "@/api/channel.js";
+import { channelAll, channelSave, channelDel } from "@/api/channel.js";
 export default {
   name: "channelPop",
   props: {
@@ -113,16 +113,8 @@ export default {
           this.myList.splice(i, 1);
         }
       }
-      // 根据最新的myList生成传递的参数
-      // 准备调用接口要传的参数,参数要求不能带‘推荐’频道，需要把‘推荐’频道去掉，从下标1开始截取，截取到的频道为要传的参数
-      let channels = this.myList.slice(1).map((item, index) => {
-        return {
-          id: item.id,
-          seq: index + 1
-        };
-      });
-      // 调用接口发送请求 保存频道
-      channelSave({ channels });
+      // 调用接口发送请求 删除频道，点哪个删哪个，把被点击的频道id传给接口
+      channelDel({ channels:[item.id] });
     }
   },
   computed: {

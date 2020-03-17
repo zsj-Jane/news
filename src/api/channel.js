@@ -22,3 +22,19 @@ export function channelSave(data) {
         data
     })
 }
+// 删除频道(批量删除用户频道列表)
+export function channelDel(data) {
+    return request({
+        url: 'user/channels',
+        method: 'delete',//跟post是一样的，参数也要叫data
+        data
+    })
+}
+// 删除频道(删除指定用户频道)，调用该接口时，直接传id就行
+export function channelDel2(data) {
+    return request({
+        // 这个接口要求把参数拼接在路径上 /user/channels/:target
+        url: 'user/channels'+data,
+        method: 'delete',//跟post是一样的，参数也要叫data
+    })
+}
