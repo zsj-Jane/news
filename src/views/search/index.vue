@@ -14,7 +14,7 @@
       <span @click="$router.back()">取消</span>
     </div>
     <!-- 历史记录区域 -->
-    <div class="history" v-if="isHistory">
+    <div class="history" v-if="suggestList.length==0">
       <!-- 标题 -->
       <div class="title">
         <span>历史记录</span>
@@ -36,10 +36,11 @@
 // 导入搜索相关接口
 import { getSuggestion } from "@/api/search.js";
 export default {
+  name:"search",
   data() {
     return {
       // 是否显示历史记录
-      isHistory: true,
+      // isHistory: true,
       // 搜索框双向绑定的值
       key: "",
       // 搜索联想建议数组
@@ -50,14 +51,15 @@ export default {
     async onInput() {
       // 如果关键词删完了，就不发送请求了,并显示出历史记录区域
       if (this.key == "") {
-        this.isHistory=true;
+        // this.isHistory=true;
+        this.suggestList=[];
         return;
       }
       // 发送请求
       let res = await getSuggestion({ q: this.key });
       // 保存获取的搜索联想建议
       this.suggestList = res.data.options;
-      this.isHistory = false;
+      // this.isHistory = false;
     }
   }
 };
