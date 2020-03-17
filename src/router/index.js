@@ -11,7 +11,7 @@ import home from '@/views/home/index.vue';
 import faq  from '@/views/faq/';
 import video from '@/views/video/';
 import mine from '@/views/mine/';
-
+import search from '@/views/search/';
 // 路由规则
 const routes = [
   {
@@ -40,6 +40,10 @@ const routes = [
       }
     ]
   },
+  {
+    path:'/search',
+    component:search
+  }
 ]
 // 实例化路由对象
 const router = new VueRouter({

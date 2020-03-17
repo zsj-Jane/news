@@ -6,6 +6,7 @@
       <van-icon class="top-icon" name="wap-nav" @click="$refs.channel.show=true" />
       <!-- 搜索框 -->
       <van-search
+        @focus="$router.push('/search')"
         class="top-search"
         v-model="value"
         shape="round"
@@ -49,7 +50,7 @@
                     <span>{{it.comm_count}}</span>
                     <span>{{it.pubdate|formatTime}}</span>
                   </div>
-                  <van-icon class="info-close" name="cross" @click="showMore(it,item.list)"/>
+                  <van-icon class="info-close" name="cross" @click="showMore(it,item.list)" />
                 </div>
               </template>
             </van-cell>
@@ -72,9 +73,9 @@ import { articleList } from "@/api/article.js";
 // 导入频道弹出层组件
 import channel from "./components/channel";
 // 导入dayjs
-import dayjs from 'dayjs';
+import dayjs from "dayjs";
 // 导入更多操作弹出层组件
-import more from './components/more';
+import more from "./components/more";
 export default {
   name: "home",
   components: {
@@ -157,10 +158,10 @@ export default {
       item.pullLoading = false;
     },
     // 更多操作图标的点击事件
-    showMore(item,list){
+    showMore(item, list) {
       // item是当前点击文章，list是当前频道保存所有文章的数组
       // 显示更多操作弹出层
-      this.$refs.more.show=true;
+      this.$refs.more.show = true;
       // 把被点击的文章的id传给组件
       this.$refs.more.art_id = item.art_id;
       // 把当前频道保存所有文章的数组传给组件
