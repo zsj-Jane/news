@@ -71,14 +71,6 @@ import { articleList } from "@/api/article.js";
 import channel from "./components/channel";
 // 导入dayjs
 import dayjs from 'dayjs';
-// 导入相对时间插件
-import relativeTime from 'dayjs/plugin/relativeTime';
-// 让day.js加载这个插件
-dayjs.extend(relativeTime);
-// 导入中文包
-import 'dayjs/locale/zh-cn';
-// 把day.js设置为使用中文
-dayjs.locale('zh-cn');
 export default {
   name: "home",
   components: {
@@ -97,8 +89,9 @@ export default {
   },
   filters: {
     // 相对时间
-    formatTime(time) {
-      return dayjs().from(time);
+    formatTime(val) {
+      // 过滤时间，返回相对时间
+      return dayjs().from(val);
     }
   },
   methods: {
