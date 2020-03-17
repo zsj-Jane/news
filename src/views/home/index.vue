@@ -159,8 +159,6 @@ export default {
     // 更多操作图标的点击事件
     showMore(item,list){
       // item是当前点击文章，list是当前频道保存所有文章的数组
-      console.log(item,list);
-      
       // 显示更多操作弹出层
       this.$refs.more.show=true;
       // 把被点击的文章的id传给组件

@@ -37,7 +37,8 @@ export default {
       }
       // 发请求给服务器，保存不感兴趣的文章操作
       let res = await articleDislike({
-        target: this.art_id
+        // 用json-bigint转换后，使用时，把转换成对象的大数字id完整拼接，用toString()方法
+        target: this.art_id.toString()
       });
       // 弹出提示
       this.$toast("删除不感兴趣项成功");
