@@ -12,6 +12,7 @@ import faq  from '@/views/faq/';
 import video from '@/views/video/';
 import mine from '@/views/mine/';
 import search from '@/views/search/';
+import searchResult from '@/views/searchResult/';
 // 路由规则
 const routes = [
   {
@@ -43,6 +44,10 @@ const routes = [
   {
     path:'/search',
     component:search
+  },
+  {
+    path:'/searchResult/:key',
+    component:searchResult
   }
 ]
 // 实例化路由对象

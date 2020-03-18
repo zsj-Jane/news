@@ -5,6 +5,7 @@
       <!-- 搜索框 -->
       <van-search
         @input="onInput"
+        @keydown.enter="$router.push(`/searchResult/${key}`)"
         class="top-search"
         v-model="key"
         background="#3194ff"
@@ -27,7 +28,18 @@
     </div>
     <!-- 搜索建议区域 -->
     <van-cell-group v-else>
-      <van-cell v-for="(item, index) in suggestList" :key="index" :title="item" icon="search" />
+      <van-cell
+        v-for="(item, index) in suggestList"
+        :key="index"
+        :title="item"
+        icon="search"
+        @click="$router.push(`/searchResult/${item}`)"
+      >
+        <!-- :title="item"无法解析出来，当做纯文本，需用自定义插槽title -->
+        <template slot="title">
+          <div v-html="item"></div>
+        </template>
+      </van-cell>
     </van-cell-group>
   </div>
 </template>
@@ -36,7 +48,7 @@
 // 导入搜索相关接口
 import { getSuggestion } from "@/api/search.js";
 export default {
-  name:"search",
+  name: "search",
   data() {
     return {
       // 是否显示历史记录
@@ -48,18 +60,31 @@ export default {
     };
   },
   methods: {
+    // 正在输入事件
     async onInput() {
       // 如果关键词删完了，就不发送请求了,并显示出历史记录区域
       if (this.key == "") {
         // this.isHistory=true;
-        this.suggestList=[];
+        // 清空搜索联想建议数组
+        this.suggestList = [];
+        // 退出方法
         return;
       }
-      // 发送请求
+      // 发送请求获得联想词汇
       let res = await getSuggestion({ q: this.key });
       // 保存获取的搜索联想建议
       this.suggestList = res.data.options;
       // this.isHistory = false;
+      // 遍历这个数组，对每个元素进行高亮处理(不区分大小写)
+      this.suggestList = this.suggestList.map(item => {
+        // 先统一转成小写，在调用replace替换每个数组元素中匹配的内容
+        return item
+          .toLowerCase()
+          .replace(
+            this.key.toLowerCase(),
+            `<span style="color:red;">${this.key}</span>`
+          );
+      });
     }
   }
 };
