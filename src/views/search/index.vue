@@ -55,40 +55,47 @@ export default {
       // 搜索框双向绑定的值
       key: "",
       // 搜索联想建议数组
-      suggestList: []
+      suggestList: [],
+      // 计时器id
+      timeId: null
     };
   },
   methods: {
     // 正在输入事件
-    async onInput() {
-      // 如果关键词删完了，就不发送请求了,并显示出历史记录区域
-      if (this.key == "") {
-        // this.isHistory=true;
-        // 清空搜索联想建议数组
-        this.suggestList = [];
-        // 退出方法
-        return;
-      }
-      // 发送请求获得联想词汇
-      let res = await getSuggestion({ q: this.key });
-      // 保存获取的搜索联想建议
-      this.suggestList = res.data.options;
-      // this.isHistory = false;
-      // 遍历这个数组，对每个元素进行高亮处理(不区分大小写)
-      this.suggestList = this.suggestList.map(item => {
-        // 先统一转成小写，在调用replace替换每个数组元素中匹配的内容
-        let str = item
-          .toLowerCase()
-          .replace(
-            this.key.toLowerCase(),
-            `<span style="color:red;">${this.key}</span>`
-          );
-        // 把原始值和新的带标签的值存进对象里，作为一个元素返回
-        return {
-          oldItem: item,
-          newItem: str
-        };
-      });
+    onInput() {
+      // 先清除上一次的计时器
+      clearTimeout(this.timeId);
+      // 开启计时器，等停止后400毫秒在执行内部函数（函数防抖）
+      this.timeId = setTimeout(async () => {
+        // 如果关键词删完了，就不发送请求了,并显示出历史记录区域
+        if (this.key == "") {
+          // this.isHistory=true;
+          // 清空搜索联想建议数组
+          this.suggestList = [];
+          // 退出方法
+          return;
+        }
+        // 发送请求获得联想词汇
+        let res = await getSuggestion({ q: this.key });
+        // 保存获取的搜索联想建议
+        this.suggestList = res.data.options;
+        // this.isHistory = false;
+        // 遍历这个数组，对每个元素进行高亮处理(不区分大小写)
+        this.suggestList = this.suggestList.map(item => {
+          // 先统一转成小写，在调用replace替换每个数组元素中匹配的内容
+          let str = item
+            .toLowerCase()
+            .replace(
+              this.key.toLowerCase(),
+              `<span style="color:red;">${this.key}</span>`
+            );
+          // 把原始值和新的带标签的值存进对象里，作为一个元素返回
+          return {
+            oldItem: item,
+            newItem: str
+          };
+        });
+      }, 400);
     }
   }
 };
