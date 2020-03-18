@@ -22,6 +22,11 @@ dayjs.extend(relativeTime);
 import 'dayjs/locale/zh-cn';
 // 把day.js设置为使用中文
 dayjs.locale('zh-cn');
+// 设置一个全局过滤器(相对时间)
+Vue.filter('formatTime', val => {
+  // 过滤时间，返回相对时间
+  return dayjs().from(val);
+});
 // 实例化vue
 new Vue({
   router,

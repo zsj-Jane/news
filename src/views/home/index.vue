@@ -72,8 +72,6 @@ import { channelList } from "@/api/channel.js";
 import { articleList } from "@/api/article.js";
 // 导入频道弹出层组件
 import channel from "./components/channel";
-// 导入dayjs
-import dayjs from "dayjs";
 // 导入更多操作弹出层组件
 import more from "./components/more";
 export default {
@@ -93,13 +91,6 @@ export default {
       // 频道数据
       channelList: []
     };
-  },
-  filters: {
-    // 相对时间
-    formatTime(val) {
-      // 过滤时间，返回相对时间
-      return dayjs().from(val);
-    }
   },
   methods: {
     // 请求频道新闻列表数据
