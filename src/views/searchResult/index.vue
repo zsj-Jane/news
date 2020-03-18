@@ -8,19 +8,21 @@
         <template slot="title">
           <!-- 标题 -->
           <div class="title">
-            <span>{{item}}</span>
+            <span>{{item.title}}</span>
+            <!-- 显示一张图片 -->
+            <img v-if="item.cover.type==1" :src="item.cover.images[0]" alt class="img" />
           </div>
           <!-- 图片 -->
-          <van-grid :border="false" :column-num="3">
-            <van-grid-item v-for="(item, index) in 3" :key="index">
-              <van-image class="img" src="https://img.yzcdn.cn/vant/apple-1.jpg" />
+          <van-grid v-if="item.cover.type==3" :border="false" :column-num="3">
+            <van-grid-item v-for="(it, idx) in item.cover.images" :key="idx">
+              <van-image class="img" :src="it" />
             </van-grid-item>
           </van-grid>
           <!-- 作者、评论、时间等信息 -->
           <div class="info">
-            <span>作者</span>
-            <span>0评论</span>
-            <span>时间</span>
+            <span>{{item.aut_name}}</span>
+            <span>{{item.comm_count}} 评论</span>
+            <span>{{item.pubdate | formatTime}}</span>
           </div>
           <!-- 评论、点赞、分享功能 -->
           <div class="btn">
@@ -31,12 +33,14 @@
         </template>
       </van-cell>
     </van-list>
-    <p>{{$route.params.key}}</p>
   </div>
 </template>
 
 <script>
+// 导入搜索相关接口
+import { getSearch } from "@/api/search.js";
 export default {
+  name: "result",
   data() {
     return {
       // 列表数据
@@ -44,27 +48,39 @@ export default {
       // 控制加载状态，为false表示不在加载状态，且当为false时，onLoad才会被调用
       loading: false,
       // 加载完成的状态，为false表示没加载完，为true表示已经加载完成
-      finished: false
+      finished: false,
+      // 当前页数
+      page: 1,
+      // 页容量
+      size: 10
     };
   },
   methods: {
     // 加载列表数据的方法，一旦执行，会自动把loading改为true
-    onLoad() {
-      // 异步更新数据
-      // setTimeout 仅做示例，真实场景中一般为 ajax 请求
-      setTimeout(() => {
-        for (let i = 0; i < 10; i++) {
-          this.list.push(this.list.length + 1);
-        }
-
-        // 加载状态结束
+    async onLoad() {
+      // 发送请求获取搜索结果
+      let res = await getSearch({
+        page: this.page,
+        per_page: this.size,
+        q: this.$route.params.key
+      });
+      console.log(res);
+      // 一页数据加载完后，下一次就要加载下一页数据
+      this.page++;
+      // 计算出最后一页的页码
+      let lastPage = Math.ceil(res.data.total_count / this.page);
+      // 有总数据量和分页数据，就以页码是否为最后一页为结束条件
+      if (this.page > lastPage) {
+        // 返回结果为空，表示数据全部加载完成
+        // 把加载完成状态改为true
+        this.finished = true;
+      } else {
+        // 表示还有数据没有加载完成
+        // 表示可以继续加载
         this.loading = false;
-
-        // 数据全部加载完成
-        if (this.list.length >= 40) {
-          this.finished = true;
-        }
-      }, 1000);
+        // 保存请求的搜索结果数据
+        this.list.push(...res.data.results);
+      }
     }
   }
 };
@@ -81,30 +97,32 @@ export default {
       color: #ffffff;
     }
   }
-  .van-cell{
+  .van-cell {
     padding-left: 0;
     padding-right: 0;
     padding-bottom: 0;
     margin-bottom: 20px;
     .title {
-      padding: 0 15px;
+      padding: 0 15px 5px;
+      display: flex;
+      justify-content: space-between;
     }
-    .img{
+    .img {
       width: 116px;
       height: 73px;
     }
-    .info{
+    .info {
       padding: 0 15px;
-      span{
+      span {
         margin-right: 10px;
         font-size: 12px;
         color: #ccc;
       }
     }
-    .btn{
+    .btn {
       display: flex;
-      .van-button--normal{
-        flex:1;
+      .van-button--normal {
+        flex: 1;
       }
     }
   }
