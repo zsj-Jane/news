@@ -6,5 +6,13 @@ export function getSuggestion(params) {
         url:"suggestion",
         method:"get",
         params
-    })
+    });
+}
+// 获取搜索结果
+export function getSearch(params) {
+    return request({
+        url:"search",
+        method:"get",
+        params
+    });
 }
