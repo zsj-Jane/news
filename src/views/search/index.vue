@@ -5,7 +5,7 @@
       <!-- 搜索框 -->
       <van-search
         @input="onInput"
-        @keydown.enter="$router.push(`/searchResult/${key}`)"
+        @keydown.enter="toSearchResult(key)"
         class="top-search"
         v-model="key"
         background="#3194ff"
@@ -19,11 +19,21 @@
       <!-- 标题 -->
       <div class="title">
         <span>历史记录</span>
-        <van-icon class="del-icon" name="delete" />
+        <van-icon class="del-icon" name="delete" @click="clearHistory" />
       </div>
       <!-- 内容 -->
       <van-row class="content">
-        <van-col span="12" class="history-item">搜索记录</van-col>
+        <van-col
+          v-for="(item, index) in historyList"
+          :key="index"
+          span="12"
+          class="history-item"
+          @click="toSearchResult(item)"
+        >
+          {{item}}
+          <!-- 阻止事件冒泡 -->
+          <van-icon class="close" name="close" @click.stop="del(index)" />
+        </van-col>
       </van-row>
     </div>
     <!-- 搜索建议区域 -->
@@ -32,7 +42,7 @@
         v-for="(item, index) in suggestList"
         :key="index"
         icon="search"
-        @click="$router.push(`/searchResult/${item.oldItem}`)"
+        @click="toSearchResult(item.oldItem)"
       >
         <!-- :title="item"无法解析出来，当做纯文本，需用自定义插槽title -->
         <template slot="title">
@@ -46,6 +56,8 @@
 <script>
 // 导入搜索相关接口
 import { getSuggestion } from "@/api/search.js";
+// 导入操作本地存储的工具
+import { setLocal, getLocal, removeLocal } from "@/utils/local.js";
 export default {
   name: "search",
   data() {
@@ -57,7 +69,9 @@ export default {
       // 搜索联想建议数组
       suggestList: [],
       // 计时器id
-      timeId: null
+      timeId: null,
+      // 历史记录数组
+      historyList: getLocal("history") || []
     };
   },
   methods: {
@@ -96,6 +110,31 @@ export default {
           };
         });
       }, 400);
+    },
+    // 跳转到搜索结果页面
+    toSearchResult(key) {
+      // 将搜索的关键字保存到历史记录数组中的第一位
+      this.historyList.unshift(key);
+      // 利用ES6中的set去重
+      this.historyList = [...new Set(this.historyList)];
+      // 把最新的历史记录数组保存在本地
+      setLocal("history", JSON.stringify(this.historyList));
+      // 跳转到搜索结果页面，并携带关键字
+      this.$router.push(`/searchResult/${key}`);
+    },
+    // 清除所有历史记录
+    clearHistory() {
+      // 清空历史记录数组
+      this.historyList = [];
+      // 删除本地存储的历史记录
+      removeLocal("history");
+    },
+    // 删除单个历史记录
+    del(index) {
+      // 从数组中删除这个元素
+      this.historyList.splice(index, 1);
+      // 把最新的历史记录数组保存在本地
+      setLocal("history", JSON.stringify(this.historyList));
     }
   }
 };
@@ -139,8 +178,13 @@ export default {
         align-items: center;
         justify-content: center;
         border-top: 0.5px solid #ccc;
+        position: relative;
         &:nth-of-type(odd) {
           border-right: 0.5px solid #ccc;
+        }
+        .close {
+          position: absolute;
+          right: 10px;
         }
       }
     }
