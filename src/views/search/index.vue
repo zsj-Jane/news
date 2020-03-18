@@ -31,13 +31,12 @@
       <van-cell
         v-for="(item, index) in suggestList"
         :key="index"
-        :title="item"
         icon="search"
-        @click="$router.push(`/searchResult/${item}`)"
+        @click="$router.push(`/searchResult/${item.oldItem}`)"
       >
         <!-- :title="item"无法解析出来，当做纯文本，需用自定义插槽title -->
         <template slot="title">
-          <div v-html="item"></div>
+          <div v-html="item.newItem"></div>
         </template>
       </van-cell>
     </van-cell-group>
@@ -78,12 +77,17 @@ export default {
       // 遍历这个数组，对每个元素进行高亮处理(不区分大小写)
       this.suggestList = this.suggestList.map(item => {
         // 先统一转成小写，在调用replace替换每个数组元素中匹配的内容
-        return item
+        let str = item
           .toLowerCase()
           .replace(
             this.key.toLowerCase(),
             `<span style="color:red;">${this.key}</span>`
           );
+        // 把原始值和新的带标签的值存进对象里，作为一个元素返回
+        return {
+          oldItem: item,
+          newItem: str
+        };
       });
     }
   }
