@@ -5,6 +5,9 @@ import VueRouter from 'vue-router'
 // 注册路由
 Vue.use(VueRouter)
 // 导入组件
+// 如果写views/login/找到views下面的login文件夹里的index.js或者index.vue
+// 但不会找到其他名字的文件
+// 注意：文件夹名字后面的/不能省略
 import login from '@/views/login/index.vue';
 import layout from '@/views/layout/index.vue';
 import home from '@/views/home/index.vue';
