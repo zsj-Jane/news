@@ -27,30 +27,10 @@ Vue.filter('formatTime', val => {
   // 过滤时间，返回相对时间
   return dayjs().from(val);
 });
-// 封装登录状态
-// 准备一个对象，里面有判断登录的方法
-let obj = { 
-  /**
-  * @description:判断登录状态
-  * @return: boolean (true:已登录，false:未登录)
-  */
-  checkLogin() {
-    // 判断token的值
-    if (this.$store.state.token) {
-      // 返回结果(有token)
-      return true;
-    } else {
-      // 弹出提示
-      this.$toast.fail("请先登录！");
-      // 跳转登录页
-      this.$router.push("/login");
-      // 返回结果(没有token)
-      return false;
-    }
-  },
-};
-// 给vue的原型添加checkLogin属性，值为判断登录的方法
-Vue.prototype.checkLogin = obj.checkLogin;
+// 导入自定义的登录状态判断的插件
+import myPlugin from '@/utils/myPlugin.js';
+// Vue.use()本质：调用myPlugin对象里的install方法，给Vue原型添加属性
+Vue.use(myPlugin);
 // 实例化vue
 new Vue({
   router,
