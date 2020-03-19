@@ -27,8 +27,8 @@
           <!-- 评论、点赞、分享功能 -->
           <div class="btn">
             <van-button type="default" icon="comment-o">评论</van-button>
-            <van-button type="default" icon="like-o">点赞</van-button>
-            <van-button type="default" icon="share">分享</van-button>
+            <van-button @click="goComment(item)" type="default" icon="like-o">点赞</van-button>
+            <van-button @click="dolike(item)" type="default" icon="share">分享</van-button>
           </div>
         </template>
       </van-cell>
@@ -56,7 +56,7 @@ export default {
     };
   },
   methods: {
-    // 加载列表数据的方法，一旦执行，会自动把loading改为true
+    // 上拉刷新：加载列表数据的方法，一旦执行，会自动把loading改为true
     async onLoad() {
       // 发送请求获取搜索结果
       let res = await getSearch({
@@ -80,6 +80,35 @@ export default {
         this.loading = false;
         // 保存请求的搜索结果数据
         this.list.push(...res.data.results);
+      }
+    },
+    // 判断登录状态
+    checkLogin() {
+      // 判断token的值
+      if (this.$store.state.token) {
+        // 返回结果(有token)
+        return true;
+      } else {
+        // 弹出提示
+        this.$toast.fail("请先登录！");
+        // 跳转登录页
+        this.$router.push("/login");
+        // 返回结果(没有token)
+        return false;
+      }
+    },
+    // 评论的点击事件
+    goComment(item) {
+      // 调用判断登录状态的函数
+      if (this.checkLogin()) {
+        console.log("评论");
+      }
+    },
+    // 点赞的点击事件
+    doLike(item) {
+      // 调用判断登录状态的函数
+      if (this.checkLogin()) {
+        console.log("点赞");
       }
     }
   }
