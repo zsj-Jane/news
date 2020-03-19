@@ -74,6 +74,8 @@ import { articleList } from "@/api/article.js";
 import channel from "./components/channel";
 // 导入更多操作弹出层组件
 import more from "./components/more";
+// 导入操作本地存储的方法
+import { getLocal } from "@/utils/local.js";
 export default {
   name: "home",
   components: {
@@ -157,29 +159,46 @@ export default {
       this.$refs.more.art_id = item.art_id;
       // 把当前频道保存所有文章的数组传给组件
       this.$refs.more.art_list = list;
+    },
+    // 请求获取用户频道方法
+    async getChannel() {
+      // 发送获取用户频道列表请求
+      let res = await channelList();
+      // 保存频道数据
+      this.channelList = res.data.channels;
+      // 拿到频道数据后，给每个频道数据添加(控制下拉刷新的状态、列表数据、控制列表的刷新状态、是否已经刷到底部)这四个属性
+      this.channelList.forEach(item => {
+        // 控制下拉刷新的状态
+        // 直接赋值，界面不会跟着响应，要用$set
+        // item.pullLoading = false;
+        this.$set(item, "pullLoading", false);
+        // 列表数据(新闻数据)
+        this.$set(item, "list", []);
+        // 控制列表的刷新状态，为false会调用onLoad，为true则不调用
+        this.$set(item, "loading", false);
+        // 是否已经刷到底部
+        this.$set(item, "finished", false);
+        // 第一次请求数据时，是没有上一次请求的时间戳的，存当前时间即可
+        // 因为不用在界面显示，直接添加属性即可
+        item.pre_timestamp = Date.now();
+      });
     }
   },
-  async created() {
-    // 发送获取用户频道列表请求
-    let res = await channelList();
-    // 保存频道数据
-    this.channelList = res.data.channels;
-    // 拿到频道数据后，给每个频道数据添加(控制下拉刷新的状态、列表数据、控制列表的刷新状态、是否已经刷到底部)这四个属性
-    this.channelList.forEach(item => {
-      // 控制下拉刷新的状态
-      // 直接赋值，界面不会跟着响应，要用$set
-      // item.pullLoading = false;
-      this.$set(item, "pullLoading", false);
-      // 列表数据(新闻数据)
-      this.$set(item, "list", []);
-      // 控制列表的刷新状态，为false会调用onLoad，为true则不调用
-      this.$set(item, "loading", false);
-      // 是否已经刷到底部
-      this.$set(item, "finished", false);
-      // 第一次请求数据时，是没有上一次请求的时间戳的，存当前时间即可
-      // 因为不用在界面显示，直接添加属性即可
-      item.pre_timestamp = Date.now();
-    });
+  created() {
+    if (this.$store.state.token) {
+      // 发送获取用户频道列表请求
+      this.getChannel();
+    } else {
+      // 没有登录,从本地存储中取出频道数组
+      let res = getLocal("channels");
+      if (res) {
+        // 有值，用channelList保存从本地存储中取出的频道数据
+        this.channelList = res;
+      } else {
+        // 没有值，就发请求拿到服务器推荐下来的默认频道
+        this.getChannel();
+      }
+    }
   }
 };
 </script>

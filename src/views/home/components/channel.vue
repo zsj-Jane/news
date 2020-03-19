@@ -61,9 +61,12 @@
 <script>
 // 导入频道相关接口
 import { channelAll, channelSave, channelDel } from "@/api/channel.js";
+// 导入操作本地存储的方法
+import { setLocal } from "@/utils/local.js";
 export default {
   name: "channelPop",
   props: {
+    // 我的频道数组
     myList: {
       type: Array,
       default: []
@@ -84,15 +87,6 @@ export default {
     addChannel(item) {
       // 把被点击的频道添加到我的频道中
       this.myList.push(item);
-      // 准备调用接口要传的参数,参数要求不能带‘推荐’频道，需要把‘推荐’频道去掉，从下标1开始截取，截取到的频道为要传的参数
-      let channels = this.myList.slice(1).map((item, index) => {
-        return {
-          id: item.id,
-          seq: index + 1
-        };
-      });
-      // 调用接口发送请求 保存频道
-      channelSave({ channels });
       // 解决新增频道对象只有id和name属性的问题，手动添加下面5个属性
       // 控制下拉刷新的状态
       // 直接赋值，界面不会跟着响应，要用$set
@@ -105,6 +99,23 @@ export default {
       this.$set(item, "finished", false);
       // 第一次请求数据时，是没有上一次请求的时间戳的，存当前时间即可
       this.$set(item, "pre_timestamp", Date.now());
+      // 判断是否登录
+      if (this.$store.state.token) {
+        // 为已登录
+        // 准备调用接口要传的参数,参数要求不能带‘推荐’频道，需要把‘推荐’频道去掉，从下标1开始截取，截取到的频道为要传的参数
+        let channels = this.myList.slice(1).map((item, index) => {
+          return {
+            id: item.id,
+            seq: index + 1
+          };
+        });
+        // 调用接口发送请求 保存频道
+        channelSave({ channels });
+      } else {
+        // 没有登录
+        // 把频道数组 保存在本地
+        setLocal("channels", JSON.stringify(this.myList));
+      }
     },
     // 删除图标的点击事件（删除频道）
     removeChannel(item) {
@@ -113,8 +124,16 @@ export default {
           this.myList.splice(i, 1);
         }
       }
-      // 调用接口发送请求 删除频道，点哪个删哪个，把被点击的频道id传给接口
-      channelDel({ channels:[item.id] });
+      // 判断是否登录
+      if (this.$store.state.token) {
+        // 为已登录
+        // 调用接口发送请求 删除频道，点哪个删哪个，把被点击的频道id传给接口
+        channelDel({ channels: [item.id] });
+      } else {
+        // 没有登录
+        // 把频道数组 保存在本地
+        setLocal("channels", JSON.stringify(this.myList));
+      }
     }
   },
   computed: {
