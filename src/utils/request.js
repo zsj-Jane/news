@@ -31,9 +31,20 @@ request.interceptors.request.use(function (config) {
 // 添加响应拦截器
 request.interceptors.response.use(function (response) {
     // 正常响应触发的函数，参数：response就是响应体
+    // 返回值是什么，发请求时.then中的res就是什么
     return response.data;
 }, function (error) {
     // 响应错误触发的函数
+    // 专门用来输出对象的，可以看到对象中的属性
+    // console.dir(error);
+    /*
+        error中的属性：
+            config：保存了发请求出错的这次请求时的配置信息
+            request：请求报文的一些数据
+            response：响应报文的一些数据
+    */
+    // 返回一个报错(输出一段报错)
+    // Promise.reject会让js强行报错，会影响后面的代码执行
     return Promise.reject(error);
 });
 // 暴露请求对象
