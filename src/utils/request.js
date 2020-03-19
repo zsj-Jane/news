@@ -68,6 +68,12 @@ request.interceptors.response.use(function (response) {
             token: res.data.data.token,
             refresh_token: store.state.refresh_token
         }));
+        // 继续完成上一次发生错误的请求
+        // error对象中属性config，保存了这次报错请求的一些配置(请求路径、参数等)，只需用这个配置再发一次请求即可
+        // config中的token会变成新的token，原因：request有请求拦截，会从vuex中拿到最新的token
+        let res2 = await request(error.config);
+        // 根据最新的token拿到上一次错误请求后该拿的数据，为了让调用请求时也能拿到这个值，return出去
+        return res2;
     } else {
         // 表示只要不是token过期，而是别的错误，就报错
         // 返回一个报错(输出一段报错)
