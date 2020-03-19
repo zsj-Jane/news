@@ -15,7 +15,13 @@
       <van-button slot="button" size="small" round>发送验证码</van-button>
     </van-field>
     <!-- 登录按钮 -->
-    <van-button type="info" :loading="isLoading" loading-type="spinner" loading-text="登录中..." @click="doLogin">登录</van-button>
+    <van-button
+      type="info"
+      :loading="isLoading"
+      loading-type="spinner"
+      loading-text="登录中..."
+      @click="doLogin"
+    >登录</van-button>
   </div>
 </template>
 
@@ -75,15 +81,21 @@ export default {
           let res = await login(this.form);
           console.log(res);
           // 登录成功后，使用vuex把token存起来（短时间）
-          this.$store.commit('changeToken',res.data.token);
-          this.$store.commit('changeRefreshToken',res.data.refresh_token);
+          this.$store.commit("changeToken", res.data.token);
+          this.$store.commit("changeRefreshToken", res.data.refresh_token);
           // 本地存储token（长久）
-          window.localStorage.setItem('ttToken',JSON.stringify(res.data));
-          // 登录成功后，跳转到首页
-          this.$router.push('/home');
+          window.localStorage.setItem("ttToken", JSON.stringify(res.data));
+          // 判断路径，如果是login就跳转到home，如果是checkLogin就跳转到原来页面
+          if (this.$route.path == "/login") {
+            // 登录成功后，跳转到首页
+            this.$router.push('/home');
+          } else {
+            // 重新登录回到原来页面
+            this.$router.back();
+          }
         } catch (error) {
           // 错误提示
-          this.$toast.fail('账号或验证码错误！');
+          this.$toast.fail("账号或验证码错误！");
         } finally {
           // 关闭登录中状态
           this.isLoading = false;

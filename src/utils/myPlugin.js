@@ -20,7 +20,7 @@ let myPlugin = {
             // 弹出提示
             Toast.fail("请先登录！");
             // 跳转登录页
-            router.push("/login");
+            router.push("/checkLogin");
             // 返回结果(没有token)
             return false;
         }

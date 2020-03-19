@@ -22,6 +22,11 @@ const routes = [
     path:'/login',
     component:login
   },
+  // login模块可以有2个路径访问
+  {
+    path:'/checkLogin',
+    component:login
+  },
   {
     path:'/layout',
     component:layout,
