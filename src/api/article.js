@@ -25,3 +25,10 @@ export function articleReport(data) {
         data
     });
 }
+// 获取文章详情
+export function articleDetail(params) {
+    return request({
+        url:`articles/${params.art_id}`,
+        method:'get'
+    });
+}
