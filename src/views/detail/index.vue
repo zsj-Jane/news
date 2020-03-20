@@ -9,7 +9,7 @@
     <!-- 作者信息 -->
     <van-cell>
       <template slot="title">
-          <!-- 头像 -->
+        <!-- 头像 -->
         <div class="avatar">
           <img src="http://toutiao.meiduo.site/Fkj6tQi3xJwVXi1u2swCElotfdCi" alt />
         </div>
@@ -24,21 +24,30 @@
     </van-cell>
     <!-- 内容部分 -->
     <div class="content">
-        Lorem ipsum dolor sit, amet consectetur adipisicing elit. Atque quibusdam illo perspiciatis deleniti omnis nostrum cum, velit assumenda quidem fugiat soluta ipsam, blanditiis adipisci, rerum qui fuga magni odit laborum.
-        Incidunt, qui numquam accusantium excepturi quaerat, hic animi est vero eveniet sunt doloribus blanditiis atque distinctio. Assumenda eos, culpa fuga sunt officiis ea rerum veritatis perferendis perspiciatis ullam, amet cupiditate.
-        rum corporis. Dignissimos quas placeat a debitis et quia est adipisci quos, id obcaecati, facilis natus enim quibusdam. Repellendus doloremque quam reprehenderit ad, voluptatum quibusdam dolorem?
+      Lorem ipsum dolor sit, amet consectetur adipisicing elit. Atque quibusdam illo perspiciatis deleniti omnis nostrum cum, velit assumenda quidem fugiat soluta ipsam, blanditiis adipisci, rerum qui fuga magni odit laborum.
+      Incidunt, qui numquam accusantium excepturi quaerat, hic animi est vero eveniet sunt doloribus blanditiis atque distinctio. Assumenda eos, culpa fuga sunt officiis ea rerum veritatis perferendis perspiciatis ullam, amet cupiditate.
+      rum corporis. Dignissimos quas placeat a debitis et quia est adipisci quos, id obcaecati, facilis natus enim quibusdam. Repellendus doloremque quam reprehenderit ad, voluptatum quibusdam dolorem?
     </div>
     <!-- 操作区域 -->
     <div class="operation">
-        <van-button icon="like" round>点赞</van-button>
-        <van-button icon="delete" round>不喜欢</van-button>
+      <van-button icon="like" round>点赞</van-button>
+      <van-button icon="delete" round>不喜欢</van-button>
     </div>
+    <h3 class="subhead">猜你喜欢</h3>
+    <!-- 评论区域 -->
+    <comment></comment>
   </div>
 </template>
 
 <script>
+// 导入评论组件
+import comment from "./component/comment";
 export default {
   name: "detail",
+  components: {
+    // 评论组件
+    comment
+  },
   data() {
     return {};
   },
@@ -50,7 +59,7 @@ export default {
 };
 </script>
 
-<style lang="less">
+<style lang="less" scoped>
 .detail {
   height: 100%;
   background-color: #fff;
@@ -73,18 +82,23 @@ export default {
       height: 50px;
       border-radius: 50%;
     }
-    .aut_info{
-        flex: 1;
-        margin-left: 15px;
+    .aut_info {
+      flex: 1;
+      margin-left: 15px;
+      .name{
+        margin-bottom: 5px;
+      }
     }
   }
-  .content{
-      padding: 30px 15px;
-      
+  .content {
+    padding: 30px 15px;
   }
-  .operation{
-      display: flex;
-      justify-content: space-around;
+  .operation {
+    display: flex;
+    justify-content: space-around;
+  }
+  .subhead {
+    padding: 0 15px;
   }
 }
 </style>
