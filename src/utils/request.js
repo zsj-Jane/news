@@ -14,7 +14,15 @@ let request = axios.create({
         // 对 data 进行任意转换处理,这里的data是服务器返回的未做处理的JSON字符串
         // 用JSONBig对响应体 转换一下，返回给.then使用
         // 转换后，.then拿到的响应体就是经过大数字处理的对象
-        return JSONBig.parse(data);
+        // 假如返回的响应体不是JSON字符串，就会报错
+        try {
+            // 服务器响应体返回的是JSON字符串，就用JSONBig对响应体 转换一下，转成JS对象再返回
+            return JSONBig.parse(data);
+        }
+        catch{
+            // 服务器响应体返回的不是JSOM字符串，本身是什么响应体，就返回什么
+            return data;
+        }
     }],
 });
 // 创建一个新的请求对象，用来在响应出错时，专门发新的请求的对象
