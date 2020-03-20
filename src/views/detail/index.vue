@@ -36,7 +36,7 @@
     <!-- 评论区域 -->
     <comment></comment>
     <!-- 写评论组件 -->
-    <write></write>
+    <write :is_collected="detail.is_collected"></write>
   </div>
 </template>
 

@@ -5,7 +5,8 @@
     <!-- 评论 -->
     <van-icon name="comment-o" />
     <!-- 收藏 -->
-    <van-icon name="star-o" />
+    <van-icon v-if="is_collected" name="star" color="yellow"/>
+    <van-icon v-else name="star-o" />
     <!-- 分享 -->
     <van-icon name="share" />
   </div>
@@ -14,6 +15,7 @@
 <script>
 export default {
   name: "write",
+  props:['is_collected'],
   data() {
       return {
           msg:""
