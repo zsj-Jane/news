@@ -20,7 +20,7 @@
         </div>
         <!-- 关注按钮 -->
         <van-button type="info" v-if="detail.is_followed">已关注</van-button>
-        <van-button type="info" icon="plus" v-else>关注</van-button>
+        <van-button type="info" icon="plus" v-else @click="follow">关注</van-button>
       </template>
     </van-cell>
     <!-- 内容部分 -->
@@ -47,6 +47,8 @@ import comment from "./component/comment";
 import write from "./component/write";
 // 导入文章相关接口
 import { articleDetail } from "@/api/article.js";
+// 导入用户相关接口
+import { followUser } from "@/api/user.js";
 export default {
   name: "detail",
   components: {
@@ -58,12 +60,26 @@ export default {
   data() {
     return {
       // 文章详情
-      detail:""
+      detail: ""
     };
   },
   methods: {
     onClickRight() {
       this.$toast("按钮");
+    },
+    // 关注按钮的点击事件
+    async follow() {
+      // 判断登录状态
+      if (this.checkLogin()) {
+        // 发请求去关注用户
+        let res = await followUser({
+          target: this.detail.aut_id
+        });
+        // 把关注状态设置为true
+        this.detail.is_followed = true;
+        // 成功提示
+        this.$toast.success("关注成功");
+      }
     }
   },
   async created() {
