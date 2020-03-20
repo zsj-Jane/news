@@ -36,17 +36,23 @@
     <h3 class="subhead">猜你喜欢</h3>
     <!-- 评论区域 -->
     <comment></comment>
+    <!-- 写评论组件 -->
+    <write></write>
   </div>
 </template>
 
 <script>
 // 导入评论组件
 import comment from "./component/comment";
+// 导入写评论组件
+import write from './component/write';
 export default {
   name: "detail",
   components: {
     // 评论组件
-    comment
+    comment,
+    // 写评论组件
+    write
   },
   data() {
     return {};
