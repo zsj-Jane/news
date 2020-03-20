@@ -29,8 +29,8 @@
     <div class="operation">
       <van-button v-if="detail.attitude==1" @click="unlike" plain color="#ff4444" icon="like" round>点赞</van-button>
       <van-button v-else @click="like" icon="like" round>点赞</van-button>
-      <van-button v-if="detail.attitude==0" plain color="#ff4444" icon="delete" round>不喜欢</van-button>
-      <van-button v-else icon="delete" round>不喜欢</van-button>
+      <van-button v-if="detail.attitude==0" @click="cancleDislike" plain color="#ff4444" icon="delete" round>不喜欢</van-button>
+      <van-button v-else @click="dislike" icon="delete" round>不喜欢</van-button>
     </div>
     <h3 class="subhead">猜你喜欢</h3>
     <!-- 评论区域 -->
@@ -46,7 +46,7 @@ import comment from "./component/comment";
 // 导入写评论组件
 import write from "./component/write";
 // 导入文章相关接口
-import { articleDetail, articleLiking,articleUnlike } from "@/api/article.js";
+import { articleDetail, articleLiking,articleUnlike,articleDislike,articleCannelDislike } from "@/api/article.js";
 // 导入用户相关接口
 import { followUser, unfollowUser } from "@/api/user.js";
 export default {
@@ -103,7 +103,7 @@ export default {
         let res = await articleUnlike({
           art_id:this.detail.art_id
         });        
-        // 把点赞状态设置为false
+        // 把attitude设置为-1（无态度）
         this.detail.attitude = -1;
       }
     },
@@ -115,8 +115,32 @@ export default {
         await articleLiking({
           target: this.detail.art_id
         });
-        // 把点赞状态设置为1
+        // 把attitude设置为1
         this.detail.attitude = 1;
+      }
+    },
+    // 取消对文章不喜欢
+    async cancleDislike(){
+      // 判断登录状态
+      if (this.checkLogin()) {
+        // 发请求去取消对文章不喜欢
+        let res = await articleCannelDislike({
+          art_id:this.detail.art_id
+        });        
+        // 把attitude为-1（无态度）
+        this.detail.attitude = -1;
+      }
+    },
+    // 不喜欢的点击事件
+    async dislike(){
+      // 判断登录状态
+      if (this.checkLogin()) {
+        // 发请求去对文章不喜欢
+        await articleDislike({
+          target: this.detail.art_id
+        });
+        // 把attitude设置为0
+        this.detail.attitude = 0;
       }
     }
   },

@@ -38,12 +38,19 @@ export function articleLiking(data) {
         url:'article/likings',
         method:'post',
         data
-    })
+    });
 }
 // 取消对文章点赞
 export function articleUnlike(data) {
     return request({
         url:`article/likings/${data.art_id}`,
         method:'delete',
-    })
+    });
+}
+// 取消对文章不喜欢
+export function articleCannelDislike(data) {
+    return request({
+        url:`article/dislikes/${data.art_id}`,
+        method:'delete',
+    });
 }
