@@ -7,7 +7,7 @@
       <van-cell v-for="(item,index) in list" :key="index">
         <template slot="title">
           <!-- 标题 -->
-          <div class="title">
+          <div class="title" @click="$router.push(`/detail/${item.art_id}`)">
             <span>{{item.title}}</span>
             <!-- 显示一张图片 -->
             <img v-if="item.cover.type==1" :src="item.cover.images[0]" alt class="img" />

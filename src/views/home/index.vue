@@ -31,7 +31,7 @@
               <!-- 自定义title内容 -->
               <template slot="title">
                 <!-- 标题 -->
-                <div class="title">
+                <div class="title" @click="$router.push(`/detail/${it.art_id}`)">
                   <span>{{it.title}}</span>
                   <!-- 单张图片显示 -->
                   <img v-if="it.cover.type==1" :src="it.cover.images[0]" alt class="pic" />
