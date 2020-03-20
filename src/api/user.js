@@ -8,3 +8,10 @@ export function followUser(data) {
         data
     })
 }
+// 取消关注用户
+export function unfollowUser(data) {
+    return request({
+        url:`user/followings/${data.aut_id}`,
+        method:'DELETE',
+    })
+}
