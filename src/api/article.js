@@ -32,3 +32,18 @@ export function articleDetail(params) {
         method:'get'
     });
 }
+// 对文章点赞
+export function articleLiking(data) {
+    return request({
+        url:'article/likings',
+        method:'post',
+        data
+    })
+}
+// 取消对文章点赞
+export function articleUnlike(data) {
+    return request({
+        url:`article/likings/${data.art_id}`,
+        method:'delete',
+    })
+}

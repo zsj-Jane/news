@@ -27,8 +27,8 @@
     <div class="content" v-html="detail.content"></div>
     <!-- 操作区域 -->
     <div class="operation">
-      <van-button v-if="detail.attitude==1" plain color="#ff4444" icon="like" round>点赞</van-button>
-      <van-button v-else icon="like" round>点赞</van-button>
+      <van-button v-if="detail.attitude==1" @click="unlike" plain color="#ff4444" icon="like" round>点赞</van-button>
+      <van-button v-else @click="like" icon="like" round>点赞</van-button>
       <van-button v-if="detail.attitude==0" plain color="#ff4444" icon="delete" round>不喜欢</van-button>
       <van-button v-else icon="delete" round>不喜欢</van-button>
     </div>
@@ -46,7 +46,7 @@ import comment from "./component/comment";
 // 导入写评论组件
 import write from "./component/write";
 // 导入文章相关接口
-import { articleDetail } from "@/api/article.js";
+import { articleDetail, articleLiking,articleUnlike } from "@/api/article.js";
 // 导入用户相关接口
 import { followUser, unfollowUser } from "@/api/user.js";
 export default {
@@ -85,6 +85,7 @@ export default {
     async unfollow() {
       // 判断登录状态
       if (this.checkLogin()) {
+        // 发请求去取关用户
         unfollowUser({
           aut_id: this.detail.aut_id
         });
@@ -92,6 +93,30 @@ export default {
         this.detail.is_followed = false;
         // 成功提示
         this.$toast.success("取消关注成功");
+      }
+    },
+    // 取消点赞
+    async unlike(){
+      // 判断登录状态
+      if (this.checkLogin()) {
+        // 发请求去取消点赞
+        let res = await articleUnlike({
+          art_id:this.detail.art_id
+        });        
+        // 把点赞状态设置为false
+        this.detail.attitude = -1;
+      }
+    },
+    // 点赞的点击事件
+    async like() {
+      // 判断登录状态
+      if (this.checkLogin()) {
+        // 发请求去点赞文章
+        await articleLiking({
+          target: this.detail.art_id
+        });
+        // 把点赞状态设置为1
+        this.detail.attitude = 1;
       }
     }
   },
