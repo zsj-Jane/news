@@ -8,3 +8,18 @@ export function commentList(params) {
         params
     });
 }
+// 对评论或评论回复点赞
+export function commentLiking(data) {
+    return request({
+        url:'comment/likings',
+        method:'post',
+        data
+    });
+}
+// 取消对评论或评论回复点赞
+export function commentCancelLiking(data) {
+    return request({
+        url:`comment/likings/${data.target}`,
+        method:'delete'
+    })
+}

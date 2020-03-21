@@ -22,8 +22,8 @@
           </div>
           <!-- 点赞部分 -->
           <div class="admire">
-            <van-icon v-if="item.is_liking" name="like" color="#ff4444" />
-            <van-icon v-else name="like-o" color="#ff4444" />
+            <van-icon v-if="item.is_liking" @click="cancleLike(item)" name="like" color="#ff4444" />
+            <van-icon v-else @click="like(item)" name="like-o" color="#ff4444" />
             <span>{{item.like_count}}</span>
           </div>
         </div>
@@ -34,7 +34,11 @@
 
 <script>
 // 导入评论相关接口
-import { commentList } from "@/api/comment.js";
+import {
+  commentList,
+  commentLiking,
+  commentCancelLiking
+} from "@/api/comment.js";
 export default {
   name: "comment",
   data() {
@@ -50,6 +54,7 @@ export default {
     };
   },
   methods: {
+    // 下拉刷新：加载数据
     async onLoad() {
       // 请求文章评论数据
       let res = await commentList({
@@ -73,6 +78,28 @@ export default {
         // 代表数据已经加载完了，结束了
         this.finished = true;
       }
+    },
+    // 取消对评论的点赞
+    async cancleLike(item) {
+      // 发送请求取消对评论的点赞
+      let res = await commentCancelLiking({
+        target: item.com_id
+      });
+      // 修改is_liking为false，显示取消点赞效果
+      item.is_liking = false;
+      // 点赞数-1
+      item.like_count--;
+    },
+    // 对评论点赞
+    async like(item) {
+      // 发送请求对评论点赞
+      let res = await commentLiking({
+        target: item.com_id
+      });
+      // 修改is_liking为true，显示点赞效果
+      item.is_liking = true;
+      // 点赞数+1
+      item.like_count++;
     }
   }
 };
