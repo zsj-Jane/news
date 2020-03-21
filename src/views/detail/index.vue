@@ -100,7 +100,7 @@ export default {
       // 判断登录状态
       if (this.checkLogin()) {
         // 发请求去取消点赞
-        let res = await articleUnlike({
+        await articleUnlike({
           art_id:this.detail.art_id
         });        
         // 把attitude设置为-1（无态度）
@@ -124,7 +124,7 @@ export default {
       // 判断登录状态
       if (this.checkLogin()) {
         // 发请求去取消对文章不喜欢
-        let res = await articleCannelDislike({
+        await articleCannelDislike({
           art_id:this.detail.art_id
         });        
         // 把attitude为-1（无态度）
@@ -149,7 +149,7 @@ export default {
     let res = await articleDetail({
       art_id: this.$route.params.art_id
     });
-    console.log(res);
+    // console.log(res);
     // 保存文章详情数据
     this.detail = res.data;
   }

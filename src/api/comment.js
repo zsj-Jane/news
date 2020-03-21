@@ -21,5 +21,13 @@ export function commentCancelLiking(data) {
     return request({
         url:`comment/likings/${data.target}`,
         method:'delete'
-    })
+    });
+}
+// 添加评论或评论回复
+export function commentAdd(data) {
+    return request({
+        url:'comments',
+        method:'post',
+        data
+    });
 }

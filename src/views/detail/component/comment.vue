@@ -39,6 +39,8 @@ import {
   commentLiking,
   commentCancelLiking
 } from "@/api/comment.js";
+// 导入eventBus
+import bus from "@/utils/bus.js";
 export default {
   name: "comment",
   data() {
@@ -66,7 +68,7 @@ export default {
         //页容量
         limit: 10
       });
-      console.log(res);
+      // console.log(res);
       // 保存获取的数据
       this.list.push(...res.data.results);
       // 继续加载数据
@@ -82,7 +84,7 @@ export default {
     // 取消对评论的点赞
     async cancleLike(item) {
       // 发送请求取消对评论的点赞
-      let res = await commentCancelLiking({
+      await commentCancelLiking({
         target: item.com_id
       });
       // 修改is_liking为false，显示取消点赞效果
@@ -93,7 +95,7 @@ export default {
     // 对评论点赞
     async like(item) {
       // 发送请求对评论点赞
-      let res = await commentLiking({
+      await commentLiking({
         target: item.com_id
       });
       // 修改is_liking为true，显示点赞效果
@@ -101,6 +103,13 @@ export default {
       // 点赞数+1
       item.like_count++;
     }
+  },
+  created() {
+    // 拿到添加的评论数据
+    bus.$on("newComment", data => {
+      // 加到评论数组中，加在第一条
+      this.list.unshift(data);
+    });
   }
 };
 </script>
