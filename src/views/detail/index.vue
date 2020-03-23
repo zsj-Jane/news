@@ -31,9 +31,23 @@
     </van-cell>
     <!-- 操作区域 -->
     <div class="operation">
-      <van-button v-if="detail.attitude==1" @click="unlike" plain color="#ff4444" icon="like" round>点赞</van-button>
+      <van-button
+        v-if="detail.attitude==1"
+        @click="unlike"
+        plain
+        color="#ff4444"
+        icon="like"
+        round
+      >点赞</van-button>
       <van-button v-else @click="like" icon="like" round>点赞</van-button>
-      <van-button v-if="detail.attitude==0" @click="cancleDislike" plain color="#ff4444" icon="delete" round>不喜欢</van-button>
+      <van-button
+        v-if="detail.attitude==0"
+        @click="cancleDislike"
+        plain
+        color="#ff4444"
+        icon="delete"
+        round
+      >不喜欢</van-button>
       <van-button v-else @click="dislike" icon="delete" round>不喜欢</van-button>
     </div>
     <h3 class="subhead">猜你喜欢</h3>
@@ -50,7 +64,13 @@ import comment from "./component/comment";
 // 导入写评论组件
 import write from "./component/write";
 // 导入文章相关接口
-import { articleDetail, articleLiking,articleUnlike,articleDislike,articleCannelDislike } from "@/api/article.js";
+import {
+  articleDetail,
+  articleLiking,
+  articleUnlike,
+  articleDislike,
+  articleCannelDislike
+} from "@/api/article.js";
 // 导入用户相关接口
 import { followUser, unfollowUser } from "@/api/user.js";
 export default {
@@ -100,13 +120,13 @@ export default {
       }
     },
     // 取消点赞
-    async unlike(){
+    async unlike() {
       // 判断登录状态
       if (this.checkLogin()) {
         // 发请求去取消点赞
         await articleUnlike({
-          art_id:this.detail.art_id
-        });        
+          art_id: this.detail.art_id
+        });
         // 把attitude设置为-1（无态度）
         this.detail.attitude = -1;
       }
@@ -124,19 +144,19 @@ export default {
       }
     },
     // 取消对文章不喜欢
-    async cancleDislike(){
+    async cancleDislike() {
       // 判断登录状态
       if (this.checkLogin()) {
         // 发请求去取消对文章不喜欢
         await articleCannelDislike({
-          art_id:this.detail.art_id
-        });        
+          art_id: this.detail.art_id
+        });
         // 把attitude为-1（无态度）
         this.detail.attitude = -1;
       }
     },
     // 不喜欢的点击事件
-    async dislike(){
+    async dislike() {
       // 判断登录状态
       if (this.checkLogin()) {
         // 发请求去对文章不喜欢
@@ -198,7 +218,8 @@ export default {
       // 限制内容区域的图片大小
       max-width: 100%;
     }
-    /deep/code {//针对英文，数组的换行
+    // 找到content中所有元素，都设置换行模式
+    /deep/ * {
       // 换行
       word-break: break-word;
       // 间隙正常
