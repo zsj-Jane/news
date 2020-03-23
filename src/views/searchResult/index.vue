@@ -26,7 +26,11 @@
           </div>
           <!-- 评论、点赞、分享功能 -->
           <div class="btn">
-            <van-button @click="goComment(item)" type="default" icon="comment-o">评论</van-button>
+            <van-button
+              @click="goComment(item)"
+              type="default"
+              icon="comment-o"
+            >{{item.comm_count!=0?item.comm_count:'评论'}}</van-button>
             <van-button @click="doLike(item)" type="default" icon="like-o">点赞</van-button>
             <van-button type="default" icon="share">分享</van-button>
           </div>
