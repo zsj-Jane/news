@@ -55,6 +55,8 @@
     <comment></comment>
     <!-- 写评论组件 -->
     <write :is_collected="detail.is_collected"></write>
+    <!-- 写评论的回复组件 -->
+    <reply></reply>
   </div>
 </template>
 
@@ -63,6 +65,8 @@
 import comment from "./component/comment";
 // 导入写评论组件
 import write from "./component/write";
+// 导入写评论的回复组件
+import reply from './component/reply';
 // 导入文章相关接口
 import {
   articleDetail,
@@ -79,7 +83,9 @@ export default {
     // 评论组件
     comment,
     // 写评论组件
-    write
+    write,
+    // 写评论的回复组件
+    reply
   },
   data() {
     return {

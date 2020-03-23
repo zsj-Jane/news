@@ -17,7 +17,7 @@
             <div class="content">{{item.content}}</div>
             <div class="tips">
               <span class="time">{{item.pubdate|formatTime}}</span>
-              <van-tag class="reply" size="large" round color="#eff7f8">回复{{item.reply_count}}</van-tag>
+              <van-tag @click="showReply(item)" class="reply" size="large" round color="#eff7f8">回复{{item.reply_count}}</van-tag>
             </div>
           </div>
           <!-- 点赞部分 -->
@@ -60,6 +60,7 @@ export default {
     async onLoad() {
       // 请求文章评论数据
       let res = await commentList({
+        // 评论类型，a-对文章(article)的评论，c-对评论(comment)的回复
         type: "a",
         // 因为comment组件还在文章详情页面中，可以通过路由拿数据
         source: this.$route.params.art_id,
@@ -102,6 +103,16 @@ export default {
       item.is_liking = true;
       // 点赞数+1
       item.like_count++;
+    },
+    // 点击回复显示回复组件
+    showReply(item){
+      // 发布消息
+      // 传了值,是否显示回复组件的值
+      // bus.$emit('showReply',true);
+      // 不传值也可以，相当于订阅方拿到的是undefined
+      // bus.$emit('showReply');
+      // 传值，但传递的是整个评论item
+      bus.$emit('showReply',item);
     }
   },
   created() {
