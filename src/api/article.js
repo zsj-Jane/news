@@ -54,3 +54,18 @@ export function articleCannelDislike(data) {
         method:'delete',
     });
 }
+// 收藏文章
+export function articleCollect(data) {
+    return request({
+        url:'article/collections',
+        method:'post',
+        data
+    });
+}
+// 取消收藏文章
+export function articleCancleCollect(data) {
+    return request({
+        url:`article/collections/${data.art_id}`,
+        method:'delete',
+    });
+}

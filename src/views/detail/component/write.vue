@@ -11,8 +11,8 @@
     <!-- 评论 -->
     <van-icon name="comment-o" />
     <!-- 收藏 -->
-    <van-icon v-if="is_collected" name="star" color="yellow" />
-    <van-icon v-else name="star-o" />
+    <van-icon v-if="selfCollect" @click="cancleCollect" name="star" color="yellow" />
+    <van-icon v-else @click="collect" name="star-o" />
     <!-- 分享 -->
     <van-icon name="share" />
   </div>
@@ -23,13 +23,24 @@
 import { commentAdd } from "@/api/comment.js";
 // 导入eventBus
 import bus from "@/utils/bus.js";
+// 导入文章相关接口
+import { articleCollect, articleCancleCollect } from "@/api/article.js";
 export default {
   name: "write",
   props: ["is_collected"],
   data() {
     return {
-      msg: ""
+      // 输入框双向绑定内容
+      msg: "",
+      // 收藏值
+      selfCollect: this.is_collected
     };
+  },
+  watch: {
+    // 侦听父组件传过来的值
+    is_collected(val) {
+      this.selfCollect = val;
+    }
   },
   methods: {
     // 发表评论
@@ -49,6 +60,24 @@ export default {
         // 把输入框中的内容清空
         this.msg = "";
       }
+    },
+    // 取消收藏文章
+    async cancleCollect() {
+      // 发请求取消收藏文章
+      await articleCancleCollect({
+        art_id: this.$route.params.art_id
+      });
+      // 改变收藏值，实现效果
+      this.selfCollect = false;
+    },
+    // 收藏文章
+    async collect() {
+      // 发请求收藏文章
+      await articleCollect({
+        target: this.$route.params.art_id
+      });
+      // 改变收藏值，实现效果
+      this.selfCollect = true;
     }
   }
 };
