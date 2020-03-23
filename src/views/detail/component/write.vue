@@ -9,12 +9,12 @@
       placeholder="写评论"
     />
     <!-- 评论 -->
-    <van-icon name="comment-o" />
+    <van-icon name="comment-o" @click="addComment" />
     <!-- 收藏 -->
     <van-icon v-if="selfCollect" @click="cancleCollect" name="star" color="yellow" />
     <van-icon v-else @click="collect" name="star-o" />
     <!-- 分享 -->
-    <van-icon name="share" />
+    <van-icon name="share" @click="share" />
   </div>
 </template>
 
@@ -78,6 +78,10 @@ export default {
       });
       // 改变收藏值，实现效果
       this.selfCollect = true;
+    },
+    // 分享按钮的点击事件
+    share(){
+      this.$toast('分享功能暂不支持');
     }
   }
 };
