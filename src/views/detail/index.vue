@@ -24,7 +24,11 @@
       </template>
     </van-cell>
     <!-- 内容部分 -->
-    <div class="content" v-html="detail.content"></div>
+    <van-cell>
+      <template slot="title">
+        <div class="content" v-html="detail.content"></div>
+      </template>
+    </van-cell>
     <!-- 操作区域 -->
     <div class="operation">
       <van-button v-if="detail.attitude==1" @click="unlike" plain color="#ff4444" icon="like" round>点赞</van-button>
@@ -189,7 +193,17 @@ export default {
     }
   }
   .content {
-    padding: 30px 15px;
+    // padding: 30px 15px;
+    /deep/img {
+      // 限制内容区域的图片大小
+      max-width: 100%;
+    }
+    /deep/code {//针对英文，数组的换行
+      // 换行
+      word-break: break-word;
+      // 间隙正常
+      white-space: normal;
+    }
   }
   .operation {
     display: flex;
