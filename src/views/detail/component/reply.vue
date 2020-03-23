@@ -116,6 +116,11 @@ export default {
       this.show = true;
       // data为评论item
       this.comment = data;
+      // 在每次显示评论回复之前，把数据恢复为默认值
+      this.list = [];
+      this.loading = false;
+      this.finished = false;
+      this.offset = undefined;
     });
   }
 };
