@@ -10,6 +10,7 @@
     />
     <!-- 评论 -->
     <van-icon name="comment-o" @click="addComment">
+      <span class="circle" v-if="show">{{isComment?com_total:reply_total}}</span>
     </van-icon>
     <!-- 如果是评论界面，就显示这个div -->
     <div v-if="isComment">
@@ -31,19 +32,37 @@ import bus from "@/utils/bus.js";
 import { articleCollect, articleCancleCollect } from "@/api/article.js";
 export default {
   name: "write",
-  props: ["is_collected", "isComment", "com_id", "reply_list"],
+  props: ["is_collected", "isComment", "com_id", "reply_list", "reply_total"],
   data() {
     return {
       // 输入框双向绑定内容
       msg: "",
       // 收藏值
       selfCollect: this.is_collected,
+      // 评论总数
+      com_total: 0,
+      // 是否显示评论图标上的数字圆圈
+      show: false
     };
   },
   watch: {
     // 侦听父组件传过来的值
     is_collected(val) {
       this.selfCollect = val;
+    },
+    // 侦听回复评论组件传过来的回复评论总数的值
+    reply_total(val) {
+      // 判断是否为回复评论界面
+      if (!this.isComment) {
+        // 判断回复评论总数是否为0
+        if (val != 0) {
+          // 当不为0时，显示红色圆圈
+          this.show = true;
+        } else {
+          // 为0时，不显示红色圆圈
+          this.show = false;
+        }
+      }
     }
   },
   methods: {
@@ -104,10 +123,28 @@ export default {
       this.selfCollect = true;
     },
     // 分享按钮的点击事件
-    share(){
-      this.$toast('分享功能暂不支持');
+    share() {
+      this.$toast("分享功能暂不支持");
     }
-  }
+  },
+  created() {
+    // 订阅
+    bus.$on("com_total", data => {
+      // 保存评论总数
+      this.com_total = data;
+      // 当显示为comment组件时
+      if (this.isComment) {
+        // 判断评论总数是否为0
+        if (this.com_total != 0) {
+          // 当不为0时，显示红色圆圈
+          this.show = true;
+        } else {
+          // 为0时，不显示红色圆圈
+          this.show = false;
+        }
+      }
+    });
+  },
 };
 </script>
 
@@ -129,6 +166,21 @@ export default {
     font-size: 22px;
     color: rgb(119, 119, 119);
     margin-right: 25px;
+  }
+  .circle {
+    display: inline-block;
+    position: absolute;
+    right: -10px;
+    top: -6px;
+    min-width: 13px;
+    height: 13px;
+    border-radius: 50%;
+    background-color: #e22829;
+    font-size: 10px;
+    color: #ffffff;
+    padding: 3px;
+    line-height: 13px;
+    text-align: center;
   }
 }
 </style>

@@ -49,6 +49,7 @@
       :com_id="comment.com_id"
       :reply_list="list"
       @addReply="addReply"
+      :reply_total="reply_total"
     ></write>
   </van-popup>
 </template>
@@ -79,7 +80,9 @@ export default {
       // 数据完全加载完毕，为true表示数据全部加载完了，为false表示还有数据没加载
       finished: false,
       // 获取评论回复数据的偏移量，值为评论id，表示从此id的数据向后取，不传表示从第一页开始读取数据
-      offset: undefined
+      offset: undefined,
+      // 回复评论总数
+      reply_total: 0
     };
   },
   methods: {
@@ -101,6 +104,8 @@ export default {
       console.log(res);
       // 保存获取的评论回复数据
       this.list.push(...res.data.results);
+      // 保存回复评论总数
+      this.reply_total = res.data.total_count;
       // 继续加载数据
       this.loading = false;
       // 把下一页的起始标识赋值给offset
