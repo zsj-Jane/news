@@ -54,7 +54,7 @@
     <!-- 评论区域 -->
     <comment></comment>
     <!-- 写评论组件 -->
-    <write :is_collected="detail.is_collected"></write>
+    <write :is_collected="detail.is_collected" :isComment="true"></write>
     <!-- 写评论的回复组件 -->
     <reply></reply>
   </div>

@@ -44,7 +44,12 @@
       </van-cell>
     </van-list>
     <!-- 写评论组件 -->
-    <write></write>
+    <write
+      :isComment="false"
+      :com_id="comment.com_id"
+      :reply_list="list"
+      @addReply="addReply"
+    ></write>
   </van-popup>
 </template>
 
@@ -105,6 +110,11 @@ export default {
         // 代表数据已经加载完了，结束了
         this.finished = true;
       }
+    },
+    // 添加回复评论
+    addReply() {
+      // 回复条数+1
+      this.comment.reply_count++;
     }
   },
   created() {
