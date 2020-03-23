@@ -60,7 +60,11 @@ import bus from "@/utils/bus.js";
 // 导入写评论组件
 import write from "./write";
 // 导入评论相关接口
-import { commentList } from "@/api/comment.js";
+import {
+  commentList,
+  commentLiking,
+  commentCancelLiking
+} from "@/api/comment.js";
 export default {
   name: "reply",
   components: {
@@ -120,6 +124,30 @@ export default {
     addReply() {
       // 回复条数+1
       this.comment.reply_count++;
+    },
+    // 取消对回复评论的点赞
+    async cancleLike(item) {
+      // 发送请求取消对评论的点赞
+      await commentCancelLiking({
+        // 回复评论id
+        target: item.com_id
+      });
+      // 修改is_liking为false，显示取消点赞效果
+      item.is_liking = false;
+      // 点赞数-1
+      item.like_count--;
+    },
+    // 对回复评论点赞
+    async like(item) {
+      // 发送请求对回复评论点赞
+      await commentLiking({
+        // 回复评论id
+        target: item.com_id
+      });
+      // 修改is_liking为true，显示点赞效果
+      item.is_liking = true;
+      // 点赞数+1
+      item.like_count++;
     }
   },
   created() {
