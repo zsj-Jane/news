@@ -9,7 +9,7 @@
       @click-right="save"
     />
     <van-cell-group class="first-cell">
-      <van-cell title="头像" is-link>
+      <van-cell @click="$refs.photo.show=true" title="头像" is-link>
         <!-- 自定义右侧内容 -->
         <template slot="default">
           <img class="avatar" :src="userInfo.photo" alt />
@@ -22,14 +22,22 @@
       <van-cell title="性别" :value="userInfo.gender==0?'男':'女'" is-link />
       <van-cell title="生日" :value="userInfo.birthday" is-link />
     </van-cell-group>
+    <!-- 选择图片弹出层 -->
+    <photo ref="photo"></photo>
   </div>
 </template>
 
 <script>
 // 导入用户相关接口
 import { getInfo, getProfile } from "@/api/user";
+// 导入选择图片弹出层组件
+import photo from "./components/photo";
 export default {
   name: "profile",
+  components: {
+    // 选择图片弹出层组件
+    photo
+  },
   data() {
     return {
       userInfo: {}
@@ -46,8 +54,8 @@ export default {
     // 获取性别、生日
     res = await getProfile();
     // 单独赋值的熟悉，要用$set来添加，否则数据没有响应式的特点
-    this.$set(this.userInfo,'gender',res.data.gender);
-    this.$set(this.userInfo,'birthday',res.data.birthday);
+    this.$set(this.userInfo, "gender", res.data.gender);
+    this.$set(this.userInfo, "birthday", res.data.birthday);
   }
 };
 </script>
