@@ -17,6 +17,7 @@ import mine from '@/views/mine/';
 import search from '@/views/search/';
 import searchResult from '@/views/searchResult/';
 import detail from '@/views/detail/';
+import profile from '@/views/profile'
 // 路由规则
 const routes = [
   {
@@ -61,6 +62,10 @@ const routes = [
   {
     path:'/detail/:art_id',
     component:detail
+  },
+  {
+    path:'/profile',
+    component:profile
   }
 ]
 // 实例化路由对象
