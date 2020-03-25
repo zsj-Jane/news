@@ -20,7 +20,7 @@
     </van-cell-group>
     <van-cell-group class="second-cell">
       <van-cell title="性别" @click="genderShow=true" :value="userInfo.gender==0?'男':'女'" is-link />
-      <van-cell title="生日" :value="userInfo.birthday" is-link />
+      <van-cell title="生日" @click="dateShow=true" :value="userInfo.birthday" is-link />
     </van-cell-group>
     <!-- 选择图片弹出层 -->
     <photo ref="photo" @uploadPhoto="changeImg" />
@@ -38,14 +38,27 @@
       <div @click="changeGender(1)" class="gender-item">女</div>
       <div @click="genderShow=false" class="gender-item">取消</div>
     </van-popup>
+    <!-- 生日弹出层 -->
+    <van-popup v-model="dateShow" position="bottom">
+      <!-- 时间选择器 -->
+      <van-datetime-picker
+        v-model="currentDate"
+        type="date"
+        :min-date="minDate"
+        :max-date="maxDate"
+        @confirm="changeDate"
+      />
+    </van-popup>
   </div>
 </template>
 
 <script>
 // 导入用户相关接口
-import { getInfo, getProfile } from "@/api/user";
+import { getInfo, getProfile, editProfile } from "@/api/user";
 // 导入选择图片弹出层组件
 import photo from "./components/photo";
+// 导入dayjs
+import dayjs from "dayjs";
 export default {
   name: "profile",
   components: {
@@ -61,7 +74,15 @@ export default {
       // 控制简介弹出层是否显示
       introShow: false,
       // 控制性别弹出层是否显示
-      genderShow: false
+      genderShow: false,
+      // 控制日期弹出层是否显示
+      dateShow: false,
+      // 能选择的最小日期
+      minDate: new Date(1949, 10, 1),
+      // 能选择的最大日期
+      maxDate: new Date(),
+      // 当前日期（选择的日期）
+      currentDate: new Date()
     };
   },
   methods: {
@@ -79,9 +100,24 @@ export default {
       // 隐藏性别弹出层
       this.genderShow = false;
     },
+    // 时间选择器中确认按钮的点击事件：修改生日
+    changeDate() {
+      // 把日期对象转成字符串，并赋值给用户信息的birthday属性
+      this.userInfo.birthday = dayjs(this.currentDate).format("YYYY-MM-DD");
+      // 隐藏生日弹出层
+      this.dateShow = false;
+    },
     // 保存按钮的点击事件
-    save() {
-      console.log("保存");
+    async save() {
+      // 发送请求保存用户个人信息
+      await editProfile({
+        name: this.userInfo.name,
+        intro: this.userInfo.intro,
+        gender: this.userInfo.gender,
+        birthday: this.userInfo.birthday
+      });
+      // 成功提示
+      this.$toast.success('修改成功!');
     }
   },
   async created() {

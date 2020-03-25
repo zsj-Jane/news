@@ -42,5 +42,13 @@ export function uploadPhoto(data) {
         url:'user/photo',
         method:'patch',
         data:fd
+    });
+}
+// 编辑用户个人资料（包含实名认证）
+export function editProfile(data) {
+    return request({
+        url:'user/profile',
+        method:'patch',
+        data
     })
 }
