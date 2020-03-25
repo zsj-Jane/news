@@ -4,8 +4,8 @@
       从相册选择
       <input ref="photoFile" @change="fileChange" type="file" style="display:none" />
     </div>
-    <div class="photo-item">拍照</div>
-    <div class="photo-item">取消</div>
+    <div class="photo-item" @click="photograph">拍照</div>
+    <div class="photo-item" @click="show=false">取消</div>
   </van-popup>
 </template>
 
@@ -57,6 +57,10 @@ export default {
             });
         }
       });
+    },
+    // 拍照的点击事件
+    photograph() {
+      this.$toast("拍照需要调用跟摄像头相关的SDK");
     }
   }
 };
