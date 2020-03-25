@@ -23,7 +23,7 @@
       <van-cell title="生日" :value="userInfo.birthday" is-link />
     </van-cell-group>
     <!-- 选择图片弹出层 -->
-    <photo ref="photo"></photo>
+    <photo ref="photo" @uploadPhoto="changeImg" />
   </div>
 </template>
 
@@ -44,8 +44,17 @@ export default {
     };
   },
   methods: {
+    // 修改头像
+    changeImg(val) {
+      // 接收photo子组件传递过来的值
+      this.userInfo.photo = val;
+      // 隐藏选择图片弹出层
+      this.$refs.photo.show = false;
+    },
     // 保存按钮的点击事件
-    save() {}
+    save() {
+      console.log('保存');
+    }
   },
   async created() {
     // 获取名字、头像、简介

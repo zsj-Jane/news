@@ -31,3 +31,16 @@ export function getProfile() {
         method:'get'
     });
 }
+// 上传头像：编辑用户照片资料（头像、身份证照片）
+export function uploadPhoto(data) {
+    // ajax如果想传文件，要通过FormData对象来传递文件
+    // 实例化FormData
+    let fd = new FormData();
+    // 把图片添加进FormData对象中，key为photo，值为传过来的图片
+    fd.append('photo',data.photo);
+    return request({
+        url:'user/photo',
+        method:'patch',
+        data:fd
+    })
+}
