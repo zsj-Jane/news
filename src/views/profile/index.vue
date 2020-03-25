@@ -15,15 +15,29 @@
           <img class="avatar" :src="userInfo.photo" alt />
         </template>
       </van-cell>
-      <van-cell title="昵称" :value="userInfo.name" is-link />
-      <van-cell title="介绍" :value="userInfo.intro" is-link />
+      <van-cell title="昵称" @click="nameShow=true" :value="userInfo.name" is-link />
+      <van-cell title="介绍" @click="introShow=true" :value="userInfo.intro" is-link />
     </van-cell-group>
     <van-cell-group class="second-cell">
-      <van-cell title="性别" :value="userInfo.gender==0?'男':'女'" is-link />
+      <van-cell title="性别" @click="genderShow=true" :value="userInfo.gender==0?'男':'女'" is-link />
       <van-cell title="生日" :value="userInfo.birthday" is-link />
     </van-cell-group>
     <!-- 选择图片弹出层 -->
     <photo ref="photo" @uploadPhoto="changeImg" />
+    <!-- 昵称弹出层 -->
+    <van-popup v-model="nameShow" position="bottom">
+      <van-field v-model="userInfo.name" placeholder="请输入昵称" />
+    </van-popup>
+    <!-- 简介弹出层 -->
+    <van-popup v-model="introShow" position="bottom">
+      <van-field v-model="userInfo.intro" placeholder="请输入简介" />
+    </van-popup>
+    <!-- 性别弹出层 -->
+    <van-popup v-model="genderShow" class="gender-popup" position="bottom">
+      <div @click="changeGender(0)" class="gender-item">男</div>
+      <div @click="changeGender(1)" class="gender-item">女</div>
+      <div @click="genderShow=false" class="gender-item">取消</div>
+    </van-popup>
   </div>
 </template>
 
@@ -40,7 +54,14 @@ export default {
   },
   data() {
     return {
-      userInfo: {}
+      // 用户信息
+      userInfo: {},
+      // 控制昵称弹出层是否显示
+      nameShow: false,
+      // 控制简介弹出层是否显示
+      introShow: false,
+      // 控制性别弹出层是否显示
+      genderShow: false
     };
   },
   methods: {
@@ -51,9 +72,16 @@ export default {
       // 隐藏选择图片弹出层
       this.$refs.photo.show = false;
     },
+    // 修改性别
+    changeGender(val) {
+      // 修改用户信息中性别的值
+      this.userInfo.gender = val;
+      // 隐藏性别弹出层
+      this.genderShow = false;
+    },
     // 保存按钮的点击事件
     save() {
-      console.log('保存');
+      console.log("保存");
     }
   },
   async created() {
@@ -92,6 +120,17 @@ export default {
   }
   .second-cell {
     margin-top: 10px;
+  }
+  .gender-popup {
+    background-color: #f5f7f9;
+    .gender-item {
+      background-color: #fff;
+      text-align: center;
+      padding: 10px 0;
+      &:last-of-type {
+        margin-top: 10px;
+      }
+    }
   }
 }
 </style>
