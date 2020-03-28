@@ -32,7 +32,11 @@
     <div class="top" v-else>
       <!-- 未登录头像 -->
       <div class="top-phone">
-        <img @click="$router.push('/login')" src="http://toutiao.research.itcast.cn/img/wd_weidl.png" alt />
+        <img
+          @click="$router.push('/login')"
+          src="http://toutiao.research.itcast.cn/img/wd_weidl.png"
+          alt
+        />
       </div>
     </div>
     <!-- 中间操作区域 -->
@@ -45,7 +49,18 @@
     <van-cell-group>
       <van-cell title="消息通知" is-link />
       <van-cell title="用户反馈" is-link />
-      <van-cell title="小智同学" is-link />
+      <!-- 
+        动态路由参数里可以直接写路径，例$router.push('/login')
+        也可以传对象：固定属性：
+          name：路由的名字（在路由中写好的）
+          params：给路由的参数
+          path：路由跳转的路径（如果写path和params的话，路由跳转后，params为空）
+      -->
+      <van-cell
+        title="小智同学"
+        @click="$router.push({name:'robot',params:{icon:userInfo.photo}})"
+        is-link
+      />
     </van-cell-group>
   </div>
 </template>

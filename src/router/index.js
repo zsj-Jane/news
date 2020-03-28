@@ -17,9 +17,15 @@ import mine from '@/views/mine/';
 import search from '@/views/search/';
 import searchResult from '@/views/searchResult/';
 import detail from '@/views/detail/';
-import profile from '@/views/profile'
+import profile from '@/views/profile/';
+import robot from '@/views/robot/';
 // 路由规则
 const routes = [
+  {
+    // 路由重定向
+    path:'/',
+    redirect:'/home'
+  },
   {
     path:'/login',
     component:login
@@ -66,6 +72,11 @@ const routes = [
   {
     path:'/profile',
     component:profile
+  },
+  {
+    name:'robot',
+    path:'/robot',
+    component:robot
   }
 ]
 // 实例化路由对象
