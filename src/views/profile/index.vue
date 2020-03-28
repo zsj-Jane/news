@@ -145,6 +145,10 @@ export default {
     }
     .van-nav-bar__text {
       color: #fff;
+      &:active{
+        // 导航栏右侧文字的激活状态
+        background-color: transparent;
+      }
     }
   }
   .first-cell {
