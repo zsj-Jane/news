@@ -61,6 +61,7 @@
         @click="$router.push({name:'robot',params:{icon:userInfo.photo}})"
         is-link
       />
+      <van-cell title="退出登录" @click="logout" is-link />
     </van-cell-group>
   </div>
 </template>
@@ -68,6 +69,7 @@
 <script>
 // 导入用户相关接口
 import { getInfo } from "@/api/user";
+import { removeLocal } from "@/utils/local.js";
 export default {
   name: "mine",
   data() {
@@ -75,6 +77,13 @@ export default {
       // 用户信息
       userInfo: {}
     };
+  },
+  methods: {
+    // 退出登录
+    logout() {
+      removeLocal("ttToken");
+      this.$store.commit('changeToken','');
+    }
   },
   async created() {
     // 判断有没有登录
