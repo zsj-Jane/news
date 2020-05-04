@@ -31,6 +31,8 @@ Vue.filter('formatTime', val => {
 import myPlugin from '@/utils/myPlugin.js';
 // Vue.use()本质：调用myPlugin对象里的install方法，给Vue原型添加属性
 Vue.use(myPlugin);
+// 导入flexible
+import 'amfe-flexible/index';
 // 实例化vue
 new Vue({
   router,
