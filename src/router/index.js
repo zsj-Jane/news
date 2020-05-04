@@ -23,7 +23,7 @@ import robot from '@/views/robot/';
 const routes = [
   {
     // 路由重定向
-    path:'/',
+    path:'',
     redirect:'/home'
   },
   {
