@@ -1,7 +1,7 @@
 <template>
   <div class="robot">
     <!-- 导航栏 -->
-    <van-nav-bar title="小智机器人" left-arrow @click-left="$router.back()" />
+    <van-nav-bar title="小智机器人" left-arrow @click-left="back" />
     <!-- 聊天面板 -->
     <div class="chat-wrap" ref="chat">
       <div class="chat-item" v-for="(item, index) in list" :key="index" :class="{user:item.isMe}">
@@ -72,6 +72,11 @@ export default {
       });
       // 清空消息输入框内容
       this.msg = "";
+    },
+    back(){
+      // 关闭连接
+      
+      this.$router.back();
     }
   },
   created() {
